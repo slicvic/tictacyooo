@@ -42,16 +42,22 @@ class Player {
         return this;
     }
 
-    setSocket() {
+    getSocket() {
         return this.socket;
     }
 
-    getSocket(socket) {
+    setSocket(socket) {
         if (typeof socket !== 'object') {
             throw 'Invalid argument socket';
         }
         this.socket = socket;
         return this;
+    }
+
+    static create(name, socket, status = null, id = null) {
+        status = (null === status) ? Player.Status.IDLE : status;
+        id = (null === id) ? Date.now().toString() : id;
+        return new Player(id, name, status, socket);
     }
 
     static isStatusValid(status) {
