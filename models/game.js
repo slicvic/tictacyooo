@@ -1,5 +1,60 @@
-class Game {
+const Player = require('./player');
 
+class Game {
+    constructor(id, status, playerX, playerO) {
+        this.setId(id);
+        this.setStatus(status);
+        this.setPlayerX(playerX);
+        this.setPlayerO(playerO);
+    }
+
+    getId() {
+        return this.id;
+    }
+
+    setId(id) {
+        if (typeof id !== 'string') {
+            throw 'Invalid argument id';
+        }
+        this.id = id;
+        return this;
+    }
+
+    getStatus() {
+        return this.status;
+    }
+
+    setStatus(status) {
+        if (typeof status !== 'string') {
+            throw 'Invalid argument status';
+        }
+        this.status = status;
+        return this;
+    }
+
+    getPlayerX() {
+        return this.playerX;
+    }
+
+    setPlayerX(playerX) {
+        if (!(playerX instanceof Player)) {
+            throw 'Invalid argument playerX';
+        }
+        this.playerX = playerX;
+        return this;
+    }
+
+    getPlayerO() {
+        return this.playerO;
+    }
+
+    setPlayerO(playerO) {
+        if (!(playerO instanceof Player)) {
+            throw 'Invalid argument playerO';
+        }
+        this.playerO = playerO;
+        return this;
+    }
 }
 
 Game.Status = {
