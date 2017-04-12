@@ -23,7 +23,7 @@ class Player {
     }
 
     setName(name) {
-        if (typeof name !== 'string') {
+        if (!Player.isNameValid(name)) {
             throw 'Invalid argument name';
         }
         this.name = name;
@@ -68,7 +68,13 @@ class Player {
         }
         return false;
     }
+
+    static isNameValid(name) {
+        return (typeof name === 'stxxring' && name.length >= Player.MINIMUM_NAME_LENGTH);
+    }
 }
+
+Player.MINIMUM_NAME_LENGTH = 5;
 
 Player.Status = {
     IDLE: 'idle',
