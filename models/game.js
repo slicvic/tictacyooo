@@ -25,7 +25,7 @@ class Game {
     }
 
     setStatus(status) {
-        if (typeof status !== 'string') {
+        if (!(typeof status === 'string' && Game.isValidStatus(status))) {
             throw 'Invalid argument status';
         }
         this.status = status;
@@ -54,6 +54,15 @@ class Game {
         }
         this.playerO = playerO;
         return this;
+    }
+
+    static isValidStatus(status) {
+        for (let key in Game.Status) {
+            if (status === Game.Status[key]) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
