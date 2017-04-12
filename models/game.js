@@ -25,7 +25,7 @@ class Game {
     }
 
     setStatus(status) {
-        if (!(typeof status === 'string' && Game.isValidStatus(status))) {
+        if (!(typeof status === 'string' && Game.isStatusValid(status))) {
             throw 'Invalid argument status';
         }
         this.status = status;
@@ -56,7 +56,7 @@ class Game {
         return this;
     }
 
-    static isValidStatus(status) {
+    static isStatusValid(status) {
         for (let key in Game.Status) {
             if (status === Game.Status[key]) {
                 return true;
@@ -67,7 +67,7 @@ class Game {
 }
 
 Game.Status = {
-    INPROGRESS: 'inprogress',
+    INPROGRESS: 'inProgress',
     OVER: 'over'
 };
 
