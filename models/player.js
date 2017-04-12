@@ -55,6 +55,7 @@ class Player {
     }
 
     static create(name, socket, status = null, id = null) {
+        const buffer = new Buffer(socket.request.connection.remoteAddress + socket.request.headers['user-agent']);
         status = (null === status) ? Player.Status.IDLE : status;
         id = (null === id) ? Date.now().toString() : id;
         return new Player(id, name, status, socket);
