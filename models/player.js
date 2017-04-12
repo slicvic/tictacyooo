@@ -70,7 +70,7 @@ class Player {
     }
 
     static isNameValid(name) {
-        return (typeof name === 'stxxring' && name.length >= Player.MINIMUM_NAME_LENGTH);
+        return (typeof name === 'string' && name.length >= Player.MINIMUM_NAME_LENGTH);
     }
 }
 
