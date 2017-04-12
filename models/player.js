@@ -66,7 +66,7 @@ class Player {
 
 Player.Status = {
     IDLE: 'idle',
-    READY: 'ready',
+    AWAITING_OPPONENT: 'awaitingOpponent',
     PLAYING: 'playing'
 };
 
