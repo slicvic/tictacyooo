@@ -75,7 +75,7 @@ class Player {
     }
 }
 
-Player.MINIMUM_NAME_LENGTH = 5;
+Player.MINIMUM_NAME_LENGTH = 3;
 
 Player.Status = {
     IDLE: 'idle',

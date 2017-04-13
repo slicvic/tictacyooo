@@ -56,6 +56,12 @@ class Game {
         return this;
     }
 
+    static create(playerX, playerO, status = null, id = null) {
+        status = (null === status) ? Game.Status.INPROGRESS : status;
+        id = (null === id) ? Date.now().toString() : id;
+        return new Game(id, status, playerX, playerO);
+    }
+
     static isStatusValid(status) {
         for (let key in Game.Status) {
             if (status === Game.Status[key]) {
