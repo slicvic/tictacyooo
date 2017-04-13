@@ -23,13 +23,27 @@ io.on('connect', function(socket) {
 			} catch (e) {
 				socket.emit('player.enter', {
 					success: false,
-					message: 'Something went wrong, yo. Try again!'
+					message: "Yo this trippin', try again!"
 				});
 			}
 		} else {
 			socket.emit('player.enter', {
 				success: false,
-				message: "That name ain't fly, yo."
+				message: "Yo that name ain't fly!"
+			});
+		}
+	});
+
+	socket.on('player.awaitingOpponent', function(data) {
+		if (typeof data === 'object' && typeof data.playerId === 'string' && players[data.playerId] instanceof Player) {
+			players[data.playerId].status = Player.Status.AWAITING_OPPONENT;
+			socket.emit('player.awaitingOpponent', {
+				success: true
+			});
+		} else {
+			socket.emit('player.awaitingOpponent', {
+				success: false,
+				message: "Yo this trippin', try again!"
 			});
 		}
 	});
