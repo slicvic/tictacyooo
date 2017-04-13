@@ -2,58 +2,51 @@ const Player = require('./player');
 
 class Game {
     constructor(id, status, playerX, playerO) {
-        this.setId(id);
-        this.setStatus(status);
-        this.setPlayerX(playerX);
-        this.setPlayerO(playerO);
-    }
-
-    getId() {
-        return this.id;
-    }
-
-    setId(id) {
-        if (typeof id !== 'string') {
-            throw 'Invalid argument id';
-        }
         this.id = id;
-        return this;
+        this.status = status;
+        this.playerX = playerX;
+        this.playerO = playerO;
     }
 
-    getStatus() {
-        return this.status;
+    get id() {
+        return this._id;
     }
 
-    setStatus(status) {
-        if (!(typeof status === 'string' && Game.isStatusValid(status))) {
+    set id(id) {
+        this._id = String(id);
+    }
+
+    get status() {
+        return this._status;
+    }
+
+    set status(status) {
+        if (!Game.isStatusValid(status)) {
             throw 'Invalid argument status';
         }
-        this.status = status;
-        return this;
+        this._status = status;
     }
 
-    getPlayerX() {
-        return this.playerX;
+    get playerX() {
+        return this._playerX;
     }
 
-    setPlayerX(playerX) {
+    set playerX(playerX) {
         if (!(playerX instanceof Player)) {
             throw 'Invalid argument playerX';
         }
-        this.playerX = playerX;
-        return this;
+        this._playerX = playerX;
     }
 
-    getPlayerO() {
-        return this.playerO;
+    get playerO() {
+        return this._playerO;
     }
 
-    setPlayerO(playerO) {
+    set playerO(playerO) {
         if (!(playerO instanceof Player)) {
             throw 'Invalid argument playerO';
         }
-        this.playerO = playerO;
-        return this;
+        this._playerO = playerO;
     }
 
     static create(playerX, playerO, status = null, id = null) {

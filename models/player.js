@@ -1,57 +1,51 @@
 class Player {
     constructor(id, name, status, socket) {
-        this.setId(id);
-        this.setName(name);
-        this.setStatus(status);
-        this.setSocket(socket);
-    }
-
-    getId() {
-        return this.id;
-    }
-
-    setId(id) {
-        if (typeof id !== 'string') {
-            throw 'Invalid argument id';
-        }
         this.id = id;
-        return this;
+        this.name = name;
+        this.status = status;
+        this.socket = socket;
     }
 
-    getName() {
-        return this.name;
+    get id() {
+        return this._id;
     }
 
-    setName(name) {
-        if (!Player.isNameValid(name)) {
+    set id(id) {
+        this._id = String(id);
+    }
+
+    get name() {
+        return this._name;
+    }
+
+    set name(name) {
+        name = String(name);
+        if (name.length < Player.MINIMUM_NAME_LENGTH) {
             throw 'Invalid argument name';
         }
-        this.name = name;
-        return this;
+        this._name = name;
     }
 
-    getStatus() {
-        return this.status;
+    get status() {
+        return this._status;
     }
 
-    setStatus(status) {
-        if (!(typeof status === 'string' && Player.isStatusValid(status))) {
+    set status(status) {
+        if (!Player.isStatusValid(status)) {
             throw 'Invalid argument status';
         }
-        this.status = status;
-        return this;
+        this._status = status;
     }
 
-    getSocket() {
-        return this.socket;
+    get socket() {
+        return this._socket;
     }
 
-    setSocket(socket) {
+    set socket(socket) {
         if (typeof socket !== 'object') {
             throw 'Invalid argument socket';
         }
-        this.socket = socket;
-        return this;
+        this._socket = socket;
     }
 
     static create(name, socket, status = null, id = null) {
@@ -68,10 +62,6 @@ class Player {
             }
         }
         return false;
-    }
-
-    static isNameValid(name) {
-        return (typeof name === 'string' && name.length >= Player.MINIMUM_NAME_LENGTH);
     }
 }
 
