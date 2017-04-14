@@ -21,7 +21,7 @@ const SocketManager = function(io = {}) {
             this.socket.on('player.awaitingOpponent', callback.bind(this));
         }
 
-        emitPlayerEnter(success, playerId, message = '') {
+        emitPlayerEnter({success = false, playerId = '', message = ''} = {}) {
             this.socket.emit('player.enter', {
                 success,
                 playerId,
@@ -29,7 +29,7 @@ const SocketManager = function(io = {}) {
             });
         }
 
-        emitPlayerAwaitingOpponent(success, message = '') {
+        emitPlayerAwaitingOpponent({success = false, message = ''} = {}) {
             this.socket.emit('player.awaitingOpponent', {
                 success,
                 message
