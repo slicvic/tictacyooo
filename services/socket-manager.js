@@ -21,6 +21,10 @@ const SocketManager = function(io = {}) {
             this.socket.on('player.awaitingOpponent', callback.bind(this));
         }
 
+        onPlayerMove(callback) {
+            this.socket.on('player.move', callback.bind(this));
+        }
+
         emitPlayerEnter({success = false, playerId = '', message = ''} = {}) {
             this.socket.emit('player.enter', {
                 success,

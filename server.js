@@ -52,4 +52,13 @@ socketManager.onConnect(function(socket) {
             });
         }
     });
+
+    // When a player makes a move, notify the opponent of the move
+    this.onPlayerMove((data) => {
+        const game = stateManager.games[data.gameId];
+        const opponent = (data.playerId === game.playerX.id) ? game.playerO : game.playerX;
+        opponent.socket.emit('opponent.move', {
+            square: data.square
+        });
+    });
 });
