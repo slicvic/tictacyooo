@@ -32,11 +32,9 @@ const StateManager = function() {
         		const playerO = this.players[playerId];
         		const firstTurn = (math.random() % 2 === 0) ? Game.Symbol.X : Game.Symbol.O;
         		const game = Game.create(playerX, playerO);
-
         		this.games[game.id] = game;
-
-        		playerX.setStatus(Player.Status.PLAYING);
-        		playerO.setStatus(Player.Status.PLAYING);
+        		playerX.status = Player.Status.PLAYING;
+        		playerO.status = Player.Status.PLAYING;
 
         		playerX.socket.emit('game.start', {
         			gameId: game.id,

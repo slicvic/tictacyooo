@@ -1,52 +1,54 @@
 const SocketManager = function(io = {}) {
 
     class SocketManager {
-        constructor(io = {}) {
+        constructor(io) {
             this.io = io;
-            this.socket = null;
         }
 
         onConnect(callback) {
             this.io.on('connect', (socket) => {
-                this.socket = socket;
                 callback.call(this, socket);
             });
         }
 
-        onPlayerEnter(callback) {
-            this.socket.on('player.enter', callback.bind(this));
+        onPlayerEnter(socket, callback) {
+            socket.on('player.enter', callback.bind(this));
         }
 
-        onPlayerAwaitingOpponent(callback) {
-            this.socket.on('player.awaitingOpponent', callback.bind(this));
+        onPlayerAwaitingOpponent(socket, callback) {
+            socket.on('player.awaitingOpponent', callback.bind(this));
         }
 
-        onPlayerMove(callback) {
-            this.socket.on('player.move', callback.bind(this));
+        onPlayerMove(socket, callback) {
+            socket.on('player.move', callback.bind(this));
         }
 
-        emitPlayerEnter({success = false, playerId = '', message = ''} = {}) {
-            this.socket.emit('player.enter', {
+        emitPlayerEnterResponse(socket, {success = false, playerId = '', message = ''} = {}) {
+            socket.emit('player.enterResponse', {
                 success,
                 playerId,
                 message
             });
         }
 
-        emitPlayerAwaitingOpponent({success = false, message = ''} = {}) {
-            this.socket.emit('player.awaitingOpponent', {
+        emitPlayerAwaitingOpponentResponse(socket, {success = false, message = ''} = {}) {
+            socket.emit('player.awaitingOpponentResponse', {
                 success,
                 message
             });
         }
 
+        emitPlayerMove(socket, {squareId = ''} = {}) {
+            socket.emit('player.move', {
+                squareId
+            });
+        }
+
         emitStats({totalPlayers = 0, totalGames = 0} = {}) {
-            const stats = {
+            this.io.emit('stats', {
                 totalPlayers,
                 totalGames
-            };
-            this.io.emit('stats', stats);
-            this.socket.emit('stats', stats);
+            });
         }
     }
 
