@@ -11,6 +11,14 @@ const StateManager = function() {
             this.games = {};
         }
 
+        countGames() {
+            return Object.keys(this.games).length;
+        }
+
+        countPlayers() {
+            return Object.keys(this.players).length;
+        }
+
         findOpponent(playerX) {
             if (!(playerX instanceof Player)) {
         		throw 'Invalid argument playerX';

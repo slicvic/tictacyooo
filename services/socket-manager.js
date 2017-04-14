@@ -35,6 +35,15 @@ const SocketManager = function(io = {}) {
                 message
             });
         }
+
+        emitStats({totalPlayers = 0, totalGames = 0} = {}) {
+            const stats = {
+                totalPlayers,
+                totalGames
+            };
+            this.io.emit('stats', stats);
+            this.socket.emit('stats', stats);
+        }
     }
 
     return new SocketManager(io);

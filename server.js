@@ -14,6 +14,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 socketManager.onConnect(function(socket) {
 
+    this.emitStats({
+        totalPlayers: stateManager.countPlayers(),
+        totalGames: stateManager.countGames()
+    });
+
     this.onPlayerEnter((data) => {
         if (typeof data === 'object' && typeof data.name === 'string') {
             try {
