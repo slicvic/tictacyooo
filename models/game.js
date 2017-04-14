@@ -1,11 +1,12 @@
 const Player = require('./player');
 
 class Game {
-    constructor(id, status, playerX, playerO) {
+    constructor(id, status, playerX, playerO, turn) {
         this.id = id;
         this.status = status;
         this.playerX = playerX;
         this.playerO = playerO;
+        this.turn = turn;
     }
 
     get id() {
@@ -47,6 +48,33 @@ class Game {
             throw 'Invalid argument playerO';
         }
         this._playerO = playerO;
+    }
+
+    get turn() {
+        return this._turn;
+    }
+
+    set turn(turn) {
+        if (!(turn === Game.Symbol.X || turn === Game.Symbol.O)) {
+            throw 'Invalid argument turn';
+        }
+        this._turn = turn;
+    }
+
+    isPlayerInGame(playerId) {
+        return (playerId === this._playerX.id || playerId === this._playerO.id);
+    }
+
+    isPlayerTurn(playerId) {
+        if (playerId === this._playerX.id && this._turn === Game.Symbol.X) {
+            return true;
+        }
+
+        if (playerId === this._playerO.id && this._turn === Game.Symbol.O) {
+            return true;
+        }
+
+        return false;
     }
 
     static create(playerX, playerO, status = null, id = null) {
