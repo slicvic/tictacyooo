@@ -5,45 +5,79 @@ const SocketManager = function(io = {}) {
             this.io = io;
         }
 
+        /**
+         * Check when a player connects.
+         */
         onConnect(callback) {
             this.io.on('connect', (socket) => {
                 callback.call(this, socket);
             });
         }
 
-        onPlayerEnter(socket, callback) {
-            socket.on('player.enter', callback.bind(this));
+        /**
+         * Check when a player requests to join.
+         */
+        onPlayerJoin(socket, callback) {
+            socket.on('player.join', callback.bind(this));
         }
 
-        onPlayerAwaitingOpponent(socket, callback) {
-            socket.on('player.awaitingOpponent', callback.bind(this));
+        /**
+         * Check when a player requests opponent.
+         */
+        onPlayerFindOpponent(socket, callback) {
+            socket.on('player.findOpponent', callback.bind(this));
         }
 
+        /**
+         * Check when a player makes a move.
+         */
         onPlayerMove(socket, callback) {
             socket.on('player.move', callback.bind(this));
         }
 
-        emitPlayerEnterResponse(socket, {success = false, playerId = '', message = ''} = {}) {
-            socket.emit('player.enterResponse', {
+        /**
+         * Notify a player whether his request to join was successful or not.
+         */
+        emitPlayerJoinResponse(socket, {success = false, playerId = '', message = ''} = {}) {
+            socket.emit('player.joinResponse', {
                 success,
                 playerId,
                 message
             });
         }
 
-        emitPlayerAwaitingOpponentResponse(socket, {success = false, message = ''} = {}) {
-            socket.emit('player.awaitingOpponentResponse', {
+        /**
+         * Notify a player whether his request to find an opponent was successful or not.
+         */
+        emitPlayerFindOpponentResponse(socket, {success = false, message = ''} = {}) {
+            socket.emit('player.findOpponentResponse', {
                 success,
                 message
             });
         }
 
-        emitPlayerMove(socket, {squareId = ''} = {}) {
-            socket.emit('player.move', {
-                squareId
+        /**
+         * Notify a player whether his move was successful or not.
+         */
+        emitPlayerMoveResponse(socket, {success = false, message = ''} = {}) {
+            socket.emit('player.moveResponse', {
+                success,
+                message
             });
         }
 
+        /**
+         * Notify a player of his opponent's move.
+         */
+        notifyOpponentMove(socket, {squareNumber = ''} = {}) {
+            socket.emit('player.opponentMove', {
+                squareNumber
+            });
+        }
+
+        /**
+         * Notify stats to all players.
+         */
         emitStats({totalPlayers = 0, totalGames = 0} = {}) {
             this.io.emit('stats', {
                 totalPlayers,
