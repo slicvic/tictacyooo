@@ -62,10 +62,13 @@ class Game {
     }
 
     isPlayerInGame(playerId) {
+        playerId = String(playerId);
         return (playerId === this._playerX.id || playerId === this._playerO.id);
     }
 
     isPlayerTurn(playerId) {
+        playerId = String(playerId);
+        
         if (playerId === this._playerX.id && this._turn === Game.Symbol.X) {
             return true;
         }
