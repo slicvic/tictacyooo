@@ -19,49 +19,72 @@ socketManager.onConnect(function(socket) {
         totalGames: stateManager.countGames()
     });
 
-    this.onPlayerEnter(socket, (data) => {
-        if (typeof data === 'object' && typeof data.name === 'string') {
-            try {
-                const player = Player.create(data.name, socket);
-                stateManager.players[player.id] = player;
-                this.emitPlayerEnterResponse(socket, {
-                    success: true,
-                    playerId: player.id
-                });
-            } catch (e) {
-                this.emitPlayerEnterResponse(socket, {
-                    success: false,
-                    message: 'Whoops! We ran into a problem, no biggie, just try again!'
-                });
+    this.onPlayerJoin(socket, (data) => {
+        try {
+            if (!(typeof data === 'object' && typeof data.name === 'string')) {
+                throw 'Invalid request data';
             }
-        } else {
-            this.emitPlayerEnterResponse(socket, {
+            const player = Player.create(data.name, socket);
+            stateManager.players[player.id] = player;
+            this.emitPlayerJoinResponse(socket, {
+                success: true,
+                playerId: player.id
+            });
+        } catch (e) {
+            this.emitPlayerJoinResponse(socket, {
                 success: false,
-                message: `Whoops! We didn't get your name, make sure it's at least ${Player.MINIMUM_NAME_LENGTH} characters!`
+                message: e
             });
         }
     });
 
-    this.onPlayerAwaitingOpponent(socket, (data) => {
-        if (typeof data === 'object' && typeof data.playerId === 'string' && stateManager.players[data.playerId] instanceof Player) {
+    this.onPlayerFindOpponent(socket, (data) => {
+        if (
+            typeof data === 'object'
+            && typeof data.playerId === 'string'
+            && stateManager.doesPlayerExist(data.playerId)
+        ) {
             const player = stateManager.players[data.playerId];
             player.status = Player.Status.AWAITING_OPPONENT;
-            this.emitPlayerAwaitingOpponentResponse(socket, {success: true});
+            this.emitPlayerFindOpponentResponse(socket, {success: true});
             stateManager.findOpponent(player);
         } else {
-            this.emitPlayerAwaitingOpponentResponse(socket, {
+            this.emitPlayerFindOpponentResponse(socket, {
                 success: false,
-                message: 'Whoops! We ran into a problem, no biggie, just try again!'
+                message: 'Invalid request data'
             });
         }
     });
 
     // When a player makes a move, notify the opponent of the move
     this.onPlayerMove(socket, (data) => {
-        const game = stateManager.games[data.gameId];
-        const opponent = (data.playerId === game.playerX.id) ? game.playerO : game.playerX;
-        socketManager.emitPlayerMove(opponent.socket, {
-            squareId: data.squareId
-        });
+        if (
+            typeof data === 'object'
+            && typeof data.gameId === 'string'
+            && typeof data.playerId === 'string'
+            && typeof data.squareNumber === 'string'
+            && stateManager.isPlayerInGame(data.playerId, data.gameId)
+        ) {
+            const game = stateManager.games[data.gameId];
+            const opponent = (data.playerId === game.playerX.id) ? game.playerO : game.playerX;
+            if (game.isPlayerTurn(opponent.id)) {
+                this.notifyOpponentMove(opponent.socket, {
+                    squareNumber: data.squareNumber
+                });
+                this.emitPlayerMoveResponse(socket, {
+                    success: true
+                });
+            } else {
+                this.emitPlayerMoveResponse(socket, {
+                    success: false,
+                    message: "It's not your turn"
+                });
+            }
+        } else {
+            this.emitPlayerMoveResponse(socket, {
+                success: false,
+                message: 'Invalid request data'
+            });
+        }
     });
 });
