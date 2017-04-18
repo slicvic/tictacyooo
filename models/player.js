@@ -20,7 +20,7 @@ class Player {
 
     set name(name) {
         name = String(name);
-        if (name.length < Player.MINIMUM_NAME_LENGTH) {
+        if (!(name.length >= Player.NAME_MIN_LENGTH && name.length <= Player.NAME_MAX_LENGTH)) {
             throw 'Invalid argument name';
         }
         this._name = name;
@@ -65,7 +65,8 @@ class Player {
     }
 }
 
-Player.MINIMUM_NAME_LENGTH = 3;
+Player.NAME_MIN_LENGTH = 3;
+Player.NAME_MAX_LENGTH = 10;
 
 Player.Status = {
     IDLE: 'idle',
