@@ -19,6 +19,24 @@ const StateManager = function() {
             return Object.keys(this.players).length;
         }
 
+        doesGameExist(gameId) {
+            gameId = String(gameId);
+            return (this.games[gameId] instanceof Game);
+        }
+
+        doesPlayerExist(playerId) {
+            playerId = String(playerId);
+            return (this.players[playerId] instanceof Player);
+        }
+
+        isPlayerInGame(playerId, gameId) {
+            if (!this.doesGameExist(gameId)) {
+                return false;
+            }
+
+            return this.games[gameId].isPlayerInGame(playerId);
+        }
+
         findOpponent(playerX) {
             if (!(playerX instanceof Player)) {
         		throw 'Invalid argument playerX';
