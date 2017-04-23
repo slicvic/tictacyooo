@@ -28,7 +28,7 @@ class Player {
             typeof socket === 'object'
             && typeof socket.request === 'object'
             && typeof socket.request.connection === 'object'
-            && typeof socket.request.remoteAddress === 'string'
+            && typeof socket.request.connection.remoteAddress === 'string'
             && typeof socket.request.headers === 'object'
             && typeof socket.request.headers['user-agent'] === 'string'
         )) {
