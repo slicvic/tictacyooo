@@ -31,7 +31,7 @@ class Game {
         }
 
         this._id = String(Date.now());
-        this._turn = (math.random() % 2 === 0) ? Game.Symbol.X : Game.Symbol.O;
+        this._turn = (math.random() % 2 === 0) ? Game.Chip.X : Game.Chip.O;
         this._grid = ['', '', '', '', '', '', '', '', ''];
         this._playerX = playerX;
         this._playerO = playerO;
@@ -96,11 +96,11 @@ class Game {
      * @return {boolean}
      */
     isPlayerTurn(player) {
-        if (player.id === this._playerX.id && this._turn === Game.Symbol.X) {
+        if (player.id === this._playerX.id && this._turn === Game.Chip.X) {
             return true;
         }
 
-        if (player.id === this._playerO.id && this._turn === Game.Symbol.O) {
+        if (player.id === this._playerO.id && this._turn === Game.Chip.O) {
             return true;
         }
 
@@ -152,11 +152,11 @@ class Game {
         }
 
         if (player.id === this._playerX.id) {
-            this._grid[cell] = Game.Symbol.X;
-            this._turn = Game.Symbol.O;
+            this._grid[cell] = Game.Chip.X;
+            this._turn = Game.Chip.O;
         } else {
-            this._grid[cell] = Game.Symbol.O;
-            this._turn = Game.Symbol.X;
+            this._grid[cell] = Game.Chip.O;
+            this._turn = Game.Chip.X;
         }
     }
 }
