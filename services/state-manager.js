@@ -1,4 +1,3 @@
-const math   = require('../helpers/math');
 const Player = require('../models/player');
 const Game   = require('../models/game');
 
@@ -74,15 +73,13 @@ class StateManager {
     		}
 
     		const playerO = this.players[playerId];
-    		const firstTurn = (math.random() % 2 === 0) ? Game.Symbol.X : Game.Symbol.O;
     		const game = Game.create(playerX, playerO);
-    		this.games[game.id] = game;
     		playerX.status = Player.Status.PLAYING;
     		playerO.status = Player.Status.PLAYING;
 
     		playerX.socket.emit('game.start', {
     			gameId: game.id,
-    			turn: firstTurn,
+    			turn: game.turn,
     			me: {
     				symbol: Game.Symbol.X
     			},
@@ -95,7 +92,7 @@ class StateManager {
 
     		playerO.socket.emit('game.start', {
     			gameId: game.id,
-    			turn: firstTurn,
+    			turn: game.turn,
     			me: {
     				symbol: Game.Symbol.O
     			},
@@ -105,6 +102,8 @@ class StateManager {
     				name: playerX.name
     			}
     		});
+
+            this.games[game.id] = game;
 
     		break;
     	}
