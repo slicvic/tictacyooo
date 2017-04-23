@@ -1,6 +1,5 @@
 /**
  * A helper for binding and emitting socket events.
- * @param {Object} [io={}] Instance of Socket.io
  */
 class SocketManager {
     /**
@@ -22,7 +21,7 @@ class SocketManager {
     }
 
     /**
-     * Check when a player joins the app.
+     * Check when a player signs in to the app.
      * @param {Object} socket
      * @param {Function} callback
      */
@@ -97,7 +96,7 @@ class SocketManager {
     }
 
     /**
-     * Notify all players of total number of games and players.
+     * Emit counts to all players.
      * @param {Object} responseData
      */
     emitCounts({totalPlayers = 0, totalGames = 0} = {}) {
