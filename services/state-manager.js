@@ -2,7 +2,7 @@ const Player = require('../models/player');
 const Game   = require('../models/game');
 
 /**
- * Maintains games and players state.
+ * Maintains state of games and players.
  */
 class StateManager {
     /**
@@ -15,6 +15,7 @@ class StateManager {
 
     /**
      * Get number of games.
+     * @return {number}
      */
     countGames() {
         return Object.keys(this.games).length;
@@ -22,6 +23,7 @@ class StateManager {
 
     /**
      * Get number of players logged in to the app.
+     * @return {number}
      */
     countPlayers() {
         return Object.keys(this.players).length;
@@ -30,6 +32,7 @@ class StateManager {
     /**
      * Check if a game exists.
      * @param {string} gameId
+     * @return {boolean}
      */
     doesGameExist(gameId) {
         gameId = String(gameId);
@@ -39,6 +42,7 @@ class StateManager {
     /**
      * Check if a player exists.
      * @param {string} playerId
+     * @return {boolean}
      */
     doesPlayerExist(playerId) {
         playerId = String(playerId);
@@ -49,6 +53,7 @@ class StateManager {
      * Check if a player is in a given game.
      * @param {string} playerId
      * @param {string} gameId
+     * @return {boolean}
      */
     isPlayerInGame(playerId, gameId) {
         if (!this.doesGameExist(gameId)) {
