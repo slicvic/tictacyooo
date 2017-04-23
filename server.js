@@ -34,7 +34,7 @@ socketManager.onConnect(function(socket) {
         } catch (e) {
             this.emitJoinResponse(socket, {
                 success: false,
-                message: e
+                message: e.message
             });
         }
     });
@@ -83,7 +83,7 @@ socketManager.onConnect(function(socket) {
             } catch (e) {
                 this.emitMoveResponse(socket, {
                     success: false,
-                    message: e
+                    message: e.message
                 });
             }
         } else {
