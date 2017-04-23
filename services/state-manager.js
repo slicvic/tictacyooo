@@ -31,7 +31,7 @@ class StateManager {
 
     /**
      * Check if a game exists.
-     * @param {string} gameId
+     * @param  {string} gameId
      * @return {boolean}
      */
     doesGameExist(gameId) {
@@ -41,26 +41,12 @@ class StateManager {
 
     /**
      * Check if a player exists.
-     * @param {string} playerId
+     * @param  {string} playerId
      * @return {boolean}
      */
     doesPlayerExist(playerId) {
         playerId = String(playerId);
         return (this.players[playerId] instanceof Player);
-    }
-
-    /**
-     * Check if a player is in a given game.
-     * @param {string} playerId
-     * @param {string} gameId
-     * @return {boolean}
-     */
-    isPlayerInGame(playerId, gameId) {
-        if (!this.doesGameExist(gameId)) {
-            return false;
-        }
-
-        return this.games[gameId].isPlayerInGame(playerId);
     }
 
     /**
@@ -78,7 +64,7 @@ class StateManager {
     		}
 
     		const playerO = this.players[playerId];
-    		const game = Game.create(playerX, playerO);
+    		const game = new Game(playerX, playerO);
     		playerX.status = Player.Status.PLAYING;
     		playerO.status = Player.Status.PLAYING;
 
