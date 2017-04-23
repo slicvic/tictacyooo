@@ -6,6 +6,16 @@ const math   = require('../helpers/math');
  */
 class Game {
     /**
+     * Check if a given cell is valid or not.
+     * @param  {number} cell
+     * @return {boolean}
+     */
+    static isValidCell(cell) {
+        cell = Number(cell);
+        return (cell >= 0 && cell <= 8);
+    }
+
+    /**
      * Create a new game.
      * @param  {Player} playerX
      * @param  {Player} playerO
@@ -82,31 +92,19 @@ class Game {
 
     /**
      * Check if it's a given player's turn or not.
-     * @param  {string} playerId
+     * @param  {Player} player
      * @return {boolean}
      */
-    isPlayerTurn(playerId) {
-        playerId = String(playerId);
-
-        if (playerId === this._playerX.id && this._turn === Game.Symbol.X) {
+    isPlayerTurn(player) {
+        if (player.id === this._playerX.id && this._turn === Game.Symbol.X) {
             return true;
         }
 
-        if (playerId === this._playerO.id && this._turn === Game.Symbol.O) {
+        if (player.id === this._playerO.id && this._turn === Game.Symbol.O) {
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * Check if a given cell is valid or not.
-     * @param  {number} cell
-     * @return {boolean}
-     */
-    isValidCell(cell) {
-        cell = Number(cell);
-        return (cell >= 0 && cell <= 8);
     }
 
     /**
@@ -141,11 +139,11 @@ class Game {
             throw Error("You're not in the game");
         }
 
-        if (!this.isPlayerTurn(player.id)) {
+        if (!this.isPlayerTurn(player)) {
             throw Error("It's not your turn");
         }
 
-        if (!this.isValidCell(cell)) {
+        if (!Game.isValidCell(cell)) {
             throw Error("That's not a valid cell");
         }
 
