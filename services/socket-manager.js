@@ -89,9 +89,9 @@ class SocketManager {
      * @param {Object} socket
      * @param {Object} responseData
      */
-    emitOpponentMove(socket, {squareNumber = ''} = {}) {
+    emitOpponentMove(socket, {cell = ''} = {}) {
         socket.emit('player.opponentMove', {
-            squareNumber
+            cell
         });
     }
 
