@@ -13,12 +13,13 @@ httpServer.listen(port);
 app.use(express.static(path.join(__dirname, 'public')));
 
 socketManager.onConnect(function(socket) {
-
+    // Send counts
     this.emitCounts({
         totalPlayers: stateManager.countPlayers(),
         totalGames: stateManager.countGames()
     });
 
+    // Player signed in to the app
     this.onJoin(socket, (data) => {
         try {
             if (!(typeof data === 'object' && typeof data.name === 'string')) {
@@ -38,6 +39,7 @@ socketManager.onConnect(function(socket) {
         }
     });
 
+    // Player is looking for opponent
     this.onFindOpponent(socket, (data) => {
         if (
             typeof data === 'object'
@@ -56,7 +58,7 @@ socketManager.onConnect(function(socket) {
         }
     });
 
-    // When a player makes a move, notify his opponent of the move
+    // Player made a move
     this.onMove(socket, (data) => {
         if (
             typeof data === 'object'
@@ -69,12 +71,13 @@ socketManager.onConnect(function(socket) {
             const player = stateManager.players[data.playerId];
             const opponent = (player.id === game.playerX.id) ? game.playerO : game.playerX;
             if (game.isPlayerTurn(player.id)) {
-                game.turn = (game.turn === Game.Symbol.X) ? Game.Symbol.O : Game.Symbol.X;
-                this.emitOpponentMove(opponent.socket, {
-                    squareNumber: data.squareNumber
-                });
+                game.switchTurn();
                 this.emitMoveResponse(socket, {
                     success: true
+                });
+                // Notify opponent
+                this.emitOpponentMove(opponent.socket, {
+                    squareNumber: data.squareNumber
                 });
             } else {
                 this.emitMoveResponse(socket, {
