@@ -30,7 +30,7 @@ class SocketManager {
     }
 
     /**
-     * Check when a player wants to find an opponent.
+     * Check when a player is looking for an opponent.
      * @param {Object} socket
      * @param {Function} callback
      */
