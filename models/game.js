@@ -115,12 +115,12 @@ class Game {
     getPlayerById(playerId) {
         playerId = String(playerId);
 
-        if (playerId === this.playerX.id) {
-            return this.playerX;
+        if (playerId === this._playerX.id) {
+            return this._playerX;
         }
 
-        if (playerId === this.playerO.id) {
-            return this.playerO;
+        if (playerId === this._playerO.id) {
+            return this._playerO;
         }
 
         return null;
@@ -147,18 +147,16 @@ class Game {
             throw Error("That's not a valid cell");
         }
 
-        cell = Number(cell);
-
         if (this._grid[cell] !== '') {
             throw Error('That move was already made');
         }
 
-        if (player.id === this.playerX.id) {
+        if (player.id === this._playerX.id) {
             this._grid[cell] = Game.Symbol.X;
-            this.turn = Game.Symbol.O;
+            this._turn = Game.Symbol.O;
         } else {
             this._grid[cell] = Game.Symbol.O;
-            this.turn = Game.Symbol.X;
+            this._turn = Game.Symbol.X;
         }
     }
 }
