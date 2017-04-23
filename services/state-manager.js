@@ -2,90 +2,123 @@ const math   = require('../helpers/math');
 const Player = require('../models/player');
 const Game   = require('../models/game');
 
-const StateManager = function() {
-
-    class StateManager {
-        constructor(socket = {}) {
-            this.socket = socket;
-            this.players = {};
-            this.games = {};
-        }
-
-        countGames() {
-            return Object.keys(this.games).length;
-        }
-
-        countPlayers() {
-            return Object.keys(this.players).length;
-        }
-
-        doesGameExist(gameId) {
-            gameId = String(gameId);
-            return (this.games[gameId] instanceof Game);
-        }
-
-        doesPlayerExist(playerId) {
-            playerId = String(playerId);
-            return (this.players[playerId] instanceof Player);
-        }
-
-        isPlayerInGame(playerId, gameId) {
-            if (!this.doesGameExist(gameId)) {
-                return false;
-            }
-
-            return this.games[gameId].isPlayerInGame(playerId);
-        }
-
-        findOpponent(playerX) {
-            if (!(playerX instanceof Player)) {
-        		throw 'Invalid argument playerX';
-        	}
-
-        	for (let playerId in this.players) {
-        		if (playerId === playerX.id || this.players[playerId].status !== Player.Status.AWAITING_OPPONENT) {
-        			continue;
-        		}
-
-        		const playerO = this.players[playerId];
-        		const firstTurn = (math.random() % 2 === 0) ? Game.Symbol.X : Game.Symbol.O;
-        		const game = Game.create(playerX, playerO);
-        		this.games[game.id] = game;
-        		playerX.status = Player.Status.PLAYING;
-        		playerO.status = Player.Status.PLAYING;
-
-        		playerX.socket.emit('game.start', {
-        			gameId: game.id,
-        			turn: firstTurn,
-        			me: {
-        				symbol: Game.Symbol.X
-        			},
-        			opponent: {
-        				symbol: Game.Symbol.O,
-        				id: game.playerO.id,
-        				name: game.playerO.name
-        			}
-        		});
-
-        		playerO.socket.emit('game.start', {
-        			gameId: game.id,
-        			turn: firstTurn,
-        			me: {
-        				symbol: Game.Symbol.O
-        			},
-        			opponent: {
-        				symbol: Game.Symbol.X,
-        				id: playerX.id,
-        				name: playerX.name
-        			}
-        		});
-
-        		break;
-        	}
-        }
+/**
+ * Maintains games and players state.
+ */
+class StateManager {
+    /**
+     * Create a new instance.
+     */
+    constructor() {
+        this.players = {};
+        this.games = {};
     }
 
-    return new StateManager();
+    /**
+     * Get number of games.
+     */
+    countGames() {
+        return Object.keys(this.games).length;
+    }
+
+    /**
+     * Get number of players logged in to the app.
+     */
+    countPlayers() {
+        return Object.keys(this.players).length;
+    }
+
+    /**
+     * Check if a game exists.
+     * @param {string} gameId
+     */
+    doesGameExist(gameId) {
+        gameId = String(gameId);
+        return (this.games[gameId] instanceof Game);
+    }
+
+    /**
+     * Check if a player exists.
+     * @param {string} playerId
+     */
+    doesPlayerExist(playerId) {
+        playerId = String(playerId);
+        return (this.players[playerId] instanceof Player);
+    }
+
+    /**
+     * Check if a player is in a given game.
+     * @param {string} playerId
+     * @param {string} gameId
+     */
+    isPlayerInGame(playerId, gameId) {
+        if (!this.doesGameExist(gameId)) {
+            return false;
+        }
+
+        return this.games[gameId].isPlayerInGame(playerId);
+    }
+
+    /**
+     * Find an opponent for a given player.
+     * @param {Player} playerX
+     */
+    findOpponent(playerX) {
+        if (!(playerX instanceof Player)) {
+    		throw 'Invalid argument playerX';
+    	}
+
+    	for (let playerId in this.players) {
+    		if (playerId === playerX.id || this.players[playerId].status !== Player.Status.AWAITING_OPPONENT) {
+    			continue;
+    		}
+
+    		const playerO = this.players[playerId];
+    		const firstTurn = (math.random() % 2 === 0) ? Game.Symbol.X : Game.Symbol.O;
+    		const game = Game.create(playerX, playerO);
+    		this.games[game.id] = game;
+    		playerX.status = Player.Status.PLAYING;
+    		playerO.status = Player.Status.PLAYING;
+
+    		playerX.socket.emit('game.start', {
+    			gameId: game.id,
+    			turn: firstTurn,
+    			me: {
+    				symbol: Game.Symbol.X
+    			},
+    			opponent: {
+    				symbol: Game.Symbol.O,
+    				id: game.playerO.id,
+    				name: game.playerO.name
+    			}
+    		});
+
+    		playerO.socket.emit('game.start', {
+    			gameId: game.id,
+    			turn: firstTurn,
+    			me: {
+    				symbol: Game.Symbol.O
+    			},
+    			opponent: {
+    				symbol: Game.Symbol.X,
+    				id: playerX.id,
+    				name: playerX.name
+    			}
+    		});
+
+    		break;
+    	}
+    }
 }
 
-module.exports = StateManager;
+let instance = null;
+
+function getInstance() {
+    if (!instance) {
+        instance = new StateManager;
+    }
+
+    return instance;
+}
+
+module.exports = getInstance;
