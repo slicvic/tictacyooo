@@ -1,4 +1,5 @@
 const Player = require('./player');
+const math   = require('../helpers/math');
 
 /**
  * Represents a game.
@@ -15,7 +16,10 @@ class Game {
     static create(playerX, playerO, status = null, id = null, turn = null) {
         status = (null === status) ? Game.Status.INPROGRESS : status;
         id = (null === id) ? Date.now().toString() : id;
-        turn = (null === turn) ? Game.Symbol.X : turn;
+        if (null === turn) {
+            turn = (math.random() % 2 === 0) ? Game.Symbol.X : Game.Symbol.O;
+        }
+
         return new Game(id, status, playerX, playerO, turn);
     }
 
