@@ -12,6 +12,7 @@ class Game {
      * @param {string} status
      * @param {string} id
      * @param {string} turn
+     * @return {Game}
      */
     static create(playerX, playerO, status = null, id = null, turn = null) {
         status = (null === status) ? Game.Status.INPROGRESS : status;
@@ -24,8 +25,9 @@ class Game {
     }
 
     /**
-     * Check if a status is valid or not.
+     * Check if a given status is valid or not.
      * @param {string} string
+     * @return {boolean}
      */
     static isStatusValid(status) {
         for (let key in Game.Status) {
@@ -54,7 +56,7 @@ class Game {
 
     /**
      * Get id.
-     * @return string
+     * @return {string}
      */
     get id() {
         return this._id;
@@ -70,7 +72,7 @@ class Game {
 
     /**
      * Get status.
-     * @return string
+     * @return {string}
      */
     get status() {
         return this._status;
@@ -89,7 +91,7 @@ class Game {
 
     /**
      * Get playerX.
-     * @return Player
+     * @return {Player}
      */
     get playerX() {
         return this._playerX;
@@ -98,7 +100,6 @@ class Game {
     /**
      * Set playerX.
      * @param {Player} playerX
-     * @throws Error
      */
     set playerX(playerX) {
         if (!(playerX instanceof Player)) {
@@ -109,7 +110,7 @@ class Game {
 
     /**
      * Get playerO.
-     * @return Player
+     * @return {Player}
      */
     get playerO() {
         return this._playerO;
@@ -118,7 +119,6 @@ class Game {
     /**
      * Set playerO.
      * @param {Player} playerO
-     * @throws Error
      */
     set playerO(playerO) {
         if (!(playerO instanceof Player)) {
@@ -129,7 +129,7 @@ class Game {
 
     /**
      * Get turn.
-     * @return string
+     * @return {string}
      */
     get turn() {
         return this._turn;
@@ -149,7 +149,7 @@ class Game {
     /**
      * Check if a player is actually in the game.
      * @param {string} playerId
-     * @return boolean
+     * @return {boolean}
      */
     isPlayerInGame(playerId) {
         playerId = String(playerId);
@@ -159,7 +159,7 @@ class Game {
     /**
      * Check if it's a player's turn.
      * @param {string} playerId
-     * @return boolean
+     * @return {boolean}
      */
     isPlayerTurn(playerId) {
         playerId = String(playerId);
