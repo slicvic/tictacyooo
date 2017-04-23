@@ -14,31 +14,31 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 socketManager.onConnect(function(socket) {
 
-    this.emitStats({
+    this.emitCounts({
         totalPlayers: stateManager.countPlayers(),
         totalGames: stateManager.countGames()
     });
 
-    this.onPlayerJoin(socket, (data) => {
+    this.onJoin(socket, (data) => {
         try {
             if (!(typeof data === 'object' && typeof data.name === 'string')) {
                 throw 'Invalid request data';
             }
             const player = Player.create(data.name, socket);
             stateManager.players[player.id] = player;
-            this.emitPlayerJoinResponse(socket, {
+            this.emitJoinResponse(socket, {
                 success: true,
                 playerId: player.id
             });
         } catch (e) {
-            this.emitPlayerJoinResponse(socket, {
+            this.emitJoinResponse(socket, {
                 success: false,
                 message: e
             });
         }
     });
 
-    this.onPlayerFindOpponent(socket, (data) => {
+    this.onFindOpponent(socket, (data) => {
         if (
             typeof data === 'object'
             && typeof data.playerId === 'string'
@@ -46,10 +46,10 @@ socketManager.onConnect(function(socket) {
         ) {
             const player = stateManager.players[data.playerId];
             player.status = Player.Status.AWAITING_OPPONENT;
-            this.emitPlayerFindOpponentResponse(socket, {success: true});
+            this.emitFindOpponentResponse(socket, {success: true});
             stateManager.findOpponent(player);
         } else {
-            this.emitPlayerFindOpponentResponse(socket, {
+            this.emitFindOpponentResponse(socket, {
                 success: false,
                 message: 'Invalid request data'
             });
@@ -57,7 +57,7 @@ socketManager.onConnect(function(socket) {
     });
 
     // When a player makes a move, notify the opponent of the move
-    this.onPlayerMove(socket, (data) => {
+    this.onMove(socket, (data) => {
         if (
             typeof data === 'object'
             && typeof data.gameId === 'string'
@@ -68,20 +68,20 @@ socketManager.onConnect(function(socket) {
             const game = stateManager.games[data.gameId];
             const opponent = (data.playerId === game.playerX.id) ? game.playerO : game.playerX;
             if (game.isPlayerTurn(opponent.id)) {
-                this.notifyOpponentMove(opponent.socket, {
+                this.emitOpponentMove(opponent.socket, {
                     squareNumber: data.squareNumber
                 });
-                this.emitPlayerMoveResponse(socket, {
+                this.emitMoveResponse(socket, {
                     success: true
                 });
             } else {
-                this.emitPlayerMoveResponse(socket, {
+                this.emitMoveResponse(socket, {
                     success: false,
                     message: "It's not your turn"
                 });
             }
         } else {
-            this.emitPlayerMoveResponse(socket, {
+            this.emitMoveResponse(socket, {
                 success: false,
                 message: 'Invalid request data'
             });
