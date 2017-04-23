@@ -72,10 +72,10 @@ class StateManager {
     			gameId: game.id,
     			turn: game.turn,
     			me: {
-    				symbol: Game.Symbol.X
+    				symbol: Game.Chip.X
     			},
     			opponent: {
-    				symbol: Game.Symbol.O,
+    				symbol: Game.Chip.O,
     				id: game.playerO.id,
     				name: game.playerO.name
     			}
@@ -85,10 +85,10 @@ class StateManager {
     			gameId: game.id,
     			turn: game.turn,
     			me: {
-    				symbol: Game.Symbol.O
+    				symbol: Game.Chip.O
     			},
     			opponent: {
-    				symbol: Game.Symbol.X,
+    				symbol: Game.Chip.X,
     				id: playerX.id,
     				name: playerX.name
     			}

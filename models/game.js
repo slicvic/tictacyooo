@@ -166,7 +166,7 @@ Game.Status = {
     OVER: 'OVER'
 };
 
-Game.Symbol = {
+Game.Chip = {
     X: 'X',
     O: 'O'
 };
