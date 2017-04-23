@@ -56,7 +56,7 @@ socketManager.onConnect(function(socket) {
         }
     });
 
-    // When a player makes a move, notify the opponent of the move
+    // When a player makes a move, notify his opponent of the move
     this.onMove(socket, (data) => {
         if (
             typeof data === 'object'
@@ -66,8 +66,10 @@ socketManager.onConnect(function(socket) {
             && stateManager.isPlayerInGame(data.playerId, data.gameId)
         ) {
             const game = stateManager.games[data.gameId];
-            const opponent = (data.playerId === game.playerX.id) ? game.playerO : game.playerX;
-            if (game.isPlayerTurn(opponent.id)) {
+            const player = stateManager.players[data.playerId];
+            const opponent = (player.id === game.playerX.id) ? game.playerO : game.playerX;
+            if (game.isPlayerTurn(player.id)) {
+                game.turn = (game.turn === Game.Symbol.X) ? Game.Symbol.O : Game.Symbol.X;
                 this.emitOpponentMove(opponent.socket, {
                     squareNumber: data.squareNumber
                 });
