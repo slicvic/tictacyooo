@@ -2,56 +2,30 @@ const Player = require('./player');
 const math   = require('../helpers/math');
 
 /**
- * Represents a game.
+ * A game object.
  */
 class Game {
     /**
      * Create a new game.
-     * @param {Player} playerX
-     * @param {Player} playerO
-     * @param {string} status
-     * @param {string} id
-     * @param {string} turn
-     * @return {Game}
+     * @param  {Player} playerX
+     * @param  {Player} playerO
+     * @throws {Error}
      */
-    static create(playerX, playerO, status = null, id = null, turn = null) {
-        status = (null === status) ? Game.Status.INPROGRESS : status;
-        id = (null === id) ? Date.now().toString() : id;
-        if (null === turn) {
-            turn = (math.random() % 2 === 0) ? Game.Symbol.X : Game.Symbol.O;
+    constructor(playerX, playerO) {
+        if (!(playerX instanceof Player)) {
+            throw Error('Invalid argument playerX');
         }
 
-        return new Game(id, status, playerX, playerO, turn);
-    }
-
-    /**
-     * Check if a given status is valid or not.
-     * @param {string} string
-     * @return {boolean}
-     */
-    static isStatusValid(status) {
-        for (let key in Game.Status) {
-            if (status === Game.Status[key]) {
-                return true;
-            }
+        if (!(playerO instanceof Player)) {
+            throw Error('Invalid argument playerO');
         }
-        return false;
-    }
 
-    /**
-     * Create a new game.
-     * @param {string} id
-     * @param {string} status
-     * @param {Player} playerX
-     * @param {Player} playerO
-     * @param {string} turn
-     */
-    constructor(id, status, playerX, playerO, turn) {
-        this.id = id;
-        this.status = status;
-        this.playerX = playerX;
-        this.playerO = playerO;
-        this.turn = turn;
+        this._id = String(Date.now());
+        this._turn = (math.random() % 2 === 0) ? Game.Symbol.X : Game.Symbol.O;
+        this._grid = ['', '', '', '', '', '', '', '', ''];
+        this._playerX = playerX;
+        this._playerO = playerO;
+        this.status = Game.Status.INPROGRESS;
     }
 
     /**
@@ -60,14 +34,6 @@ class Game {
      */
     get id() {
         return this._id;
-    }
-
-    /**
-     * Set id.
-     * @param {string} id
-     */
-    set id(id) {
-        this._id = String(id);
     }
 
     /**
@@ -80,11 +46,12 @@ class Game {
 
     /**
      * Set status.
-     * @param {string} status
+     * @param  {string} status
+     * @throws {Error}
      */
     set status(status) {
-        if (!Game.isStatusValid(status)) {
-            throw 'Invalid argument status';
+        if (!(typeof status === 'string' && Game.Status[status])) {
+            throw Error('Invalid argument status');
         }
         this._status = status;
     }
@@ -98,33 +65,11 @@ class Game {
     }
 
     /**
-     * Set playerX.
-     * @param {Player} playerX
-     */
-    set playerX(playerX) {
-        if (!(playerX instanceof Player)) {
-            throw 'Invalid argument playerX';
-        }
-        this._playerX = playerX;
-    }
-
-    /**
      * Get playerO.
      * @return {Player}
      */
     get playerO() {
         return this._playerO;
-    }
-
-    /**
-     * Set playerO.
-     * @param {Player} playerO
-     */
-    set playerO(playerO) {
-        if (!(playerO instanceof Player)) {
-            throw 'Invalid argument playerO';
-        }
-        this._playerO = playerO;
     }
 
     /**
@@ -136,29 +81,8 @@ class Game {
     }
 
     /**
-     * Set turn.
-     * @param {string} turn
-     */
-    set turn(turn) {
-        if (!(turn === Game.Symbol.X || turn === Game.Symbol.O)) {
-            throw 'Invalid argument turn';
-        }
-        this._turn = turn;
-    }
-
-    /**
-     * Check if a player is actually in the game.
-     * @param {string} playerId
-     * @return {boolean}
-     */
-    isPlayerInGame(playerId) {
-        playerId = String(playerId);
-        return (playerId === this._playerX.id || playerId === this._playerO.id);
-    }
-
-    /**
-     * Check if it's a player's turn.
-     * @param {string} playerId
+     * Check if it's a given player's turn or not.
+     * @param  {string} playerId
      * @return {boolean}
      */
     isPlayerTurn(playerId) {
@@ -176,16 +100,74 @@ class Game {
     }
 
     /**
-     * Switch player turns.
+     * Check if a given cell is valid or not.
+     * @param  {number} cell
+     * @return {boolean}
      */
-    switchTurn() {
-        this.turn = (turn.turn === Game.Symbol.X) ? Game.Symbol.O : Game.Symbol.X;
+    isValidCell(cell) {
+        cell = Number(cell);
+        return (cell >= 0 && cell <= 8);
+    }
+
+    /**
+     * Get player by id.
+     * @param  {string} playerId
+     * @return {Player|null}
+     */
+    getPlayerById(playerId) {
+        playerId = String(playerId);
+
+        if (playerId === this.playerX.id) {
+            return this.playerX;
+        }
+
+        if (playerId === this.playerO.id) {
+            return this.playerO;
+        }
+
+        return null;
+    }
+
+    /**
+     * Make a move.
+     * @param  {string} playerId
+     * @param  {number} cell
+     * @throws {Error}
+     */
+    makeMove(playerId, cell) {
+        const player = this.getPlayerById(playerId);
+
+        if (!player) {
+            throw Error("You're not in the game");
+        }
+
+        if (!this.isPlayerTurn(player.id)) {
+            throw Error("It's not your turn");
+        }
+
+        if (!this.isValidCell(cell)) {
+            throw Error("That's not a valid cell");
+        }
+
+        cell = Number(cell);
+
+        if (this._grid[cell] !== '') {
+            throw Error('That move was already made');
+        }
+
+        if (player.id === this.playerX.id) {
+            this._grid[cell] = Game.Symbol.X;
+            this.turn = Game.Symbol.O;
+        } else {
+            this._grid[cell] = Game.Symbol.O;
+            this.turn = Game.Symbol.X;
+        }
     }
 }
 
 Game.Status = {
-    INPROGRESS: 'inProgress',
-    OVER: 'over'
+    INPROGRESS: 'INPROGRESS',
+    OVER: 'OVER'
 };
 
 Game.Symbol = {

@@ -1,47 +1,44 @@
 /**
- * Represents a player.
+ * A player object.
  */
 class Player {
     /**
      * Create a new player.
-     * @param {string} name
-     * @param {Object} socket
-     * @param {string} status
-     * @param {string} id
+     * @param  {string} name
+     * @param  {Object} socket
      * @return {Player}
      */
-    static create(name, socket, status = null, id = null) {
-        const buffer = new Buffer(socket.request.connection.remoteAddress + socket.request.headers['user-agent']);
-        status = (null === status) ? Player.Status.IDLE : status;
-        id = (null === id) ? Date.now().toString() : id;
-        return new Player(id, name, status, socket);
-    }
-
-    /**
-     * Check if a given status is valid or not.
-     * @return {boolean}
-     */
-    static isStatusValid(status) {
-        for (let key in Player.Status) {
-            if (status === Player.Status[key]) {
-                return true;
-            }
-        }
-        return false;
+    static create(name, socket) {
+        return new Player(name, Player.Status.IDLE, socket);
     }
 
     /**
      * Create a new player.
-     * @param {string} id
-     * @param {string} name
-     * @param {string} status
-     * @param {Object} socket
+     * @param  {string} name
+     * @param  {string} status
+     * @param  {Object} socket
+     * @throws {Error}
      */
-    constructor(id, name, status, socket) {
-        this.id = id;
-        this.name = name;
+    constructor(name, status, socket) {
+        if (!(typeof name === 'string' && name.length >= Player.NAME_MIN_LENGTH && name.length <= Player.NAME_MAX_LENGTH)) {
+            throw Error('Invalid argument name');
+        }
+
+        if (!(
+            typeof socket === 'object'
+            && typeof socket.request === 'object'
+            && typeof socket.request.connection === 'object'
+            && typeof socket.request.remoteAddress === 'string'
+            && typeof socket.request.headers === 'object'
+            && typeof socket.request.headers['user-agent'] === 'string'
+        )) {
+            throw Error('Invalid argument socket');
+        }
+
+        this._id = Buffer.from(socket.request.connection.remoteAddress + socket.request.headers['user-agent']).toString('base64');
+        this._name = name;
+        this._socket = socket;
         this.status = status;
-        this.socket = socket;
     }
 
     /**
@@ -53,31 +50,11 @@ class Player {
     }
 
     /**
-     * Set id.
-     * @param {string} id
-     */
-    set id(id) {
-        this._id = String(id);
-    }
-
-    /**
      * Get name.
      * @return {string}
      */
     get name() {
         return this._name;
-    }
-
-    /**
-     * Set name.
-     * @param {string} name
-     */
-    set name(name) {
-        name = String(name);
-        if (!(name.length >= Player.NAME_MIN_LENGTH && name.length <= Player.NAME_MAX_LENGTH)) {
-            throw 'Invalid argument name';
-        }
-        this._name = name;
     }
 
     /**
@@ -90,12 +67,14 @@ class Player {
 
     /**
      * Set status.
-     * @param {string} status
+     * @param  {string} status
+     * @throws {Error}
      */
     set status(status) {
-        if (!Player.isStatusValid(status)) {
-            throw 'Invalid argument status';
+        if (!(typeof status === 'string' && Player.Status[status])) {
+            throw Error('Invalid argument status');
         }
+
         this._status = status;
     }
 
@@ -106,26 +85,15 @@ class Player {
     get socket() {
         return this._socket;
     }
-
-    /**
-     * Set socket.
-     * @param {Object} socket
-     */
-    set socket(socket) {
-        if (typeof socket !== 'object') {
-            throw 'Invalid argument socket';
-        }
-        this._socket = socket;
-    }
 }
 
 Player.NAME_MIN_LENGTH = 3;
 Player.NAME_MAX_LENGTH = 10;
 
 Player.Status = {
-    IDLE: 'idle',
-    AWAITING_OPPONENT: 'awaitingOpponent',
-    PLAYING: 'playing'
+    IDLE: 'IDLE',
+    AWAITING_OPPONENT: 'AWAITING_OPPONENT',
+    PLAYING: 'PLAYING'
 };
 
 module.exports = Player;
