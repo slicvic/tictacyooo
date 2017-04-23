@@ -23,7 +23,7 @@ socketManager.onConnect(function(socket) {
     this.onJoin(socket, (data) => {
         try {
             if (!(typeof data === 'object' && typeof data.name === 'string')) {
-                throw 'Invalid request data';
+                throw Error('Invalid request data');
             }
             const player = Player.create(data.name, socket);
             stateManager.players[player.id] = player;
@@ -64,25 +64,26 @@ socketManager.onConnect(function(socket) {
             typeof data === 'object'
             && typeof data.gameId === 'string'
             && typeof data.playerId === 'string'
-            && typeof data.squareNumber === 'string'
-            && stateManager.isPlayerInGame(data.playerId, data.gameId)
+            && typeof data.cell === 'number'
+            && stateManager.doesPlayerExist(data.playerId)
+            && stateManager.doesGameExist(data.gameId)
         ) {
             const game = stateManager.games[data.gameId];
             const player = stateManager.players[data.playerId];
             const opponent = (player.id === game.playerX.id) ? game.playerO : game.playerX;
-            if (game.isPlayerTurn(player.id)) {
-                game.switchTurn();
+            try {
+                game.makeMove(player.id, cell);
                 this.emitMoveResponse(socket, {
                     success: true
                 });
                 // Notify opponent
                 this.emitOpponentMove(opponent.socket, {
-                    squareNumber: data.squareNumber
+                    cell: data.cell
                 });
-            } else {
+            } catch (e) {
                 this.emitMoveResponse(socket, {
                     success: false,
-                    message: "It's not your turn"
+                    message: e
                 });
             }
         } else {
