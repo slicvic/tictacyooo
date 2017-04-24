@@ -123,7 +123,7 @@ class Game {
     makeMove(playerId, cell) {
         cell = Number(cell);
 
-        if (!(cell >= 0 && cell <= 8))) {
+        if (!(cell >= 0 && cell <= 8)) {
             throw Error("That's not a valid cell");
         }
 
