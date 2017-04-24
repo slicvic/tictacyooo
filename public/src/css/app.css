@@ -1,0 +1,61 @@
+* {
+	font-family: 'Courgette', Helvetica, sans-serif;
+}
+
+body {
+	background: #333;
+	text-align: center;
+	color: #fff;
+	margin: 0;
+}
+
+header {
+	color: #fff;
+	background: #ed2939;
+	padding: 15px;
+	font-size: 20px;
+	margin-bottom: 20px;
+}
+
+footer {
+	margin: 20px;
+}
+
+a {
+	color: #fff;
+	text-decoration: underline;
+}
+
+h1 {
+	margin: 0;
+}
+
+section {
+	/*display: none;*/
+}
+
+section#join label {
+	font-size: 30px;
+}
+
+section#join input {
+	border: 2px solid #444;
+	font-size: 30px;
+	padding: 10px 0;
+	text-align: center;
+	border-radius: 4px;
+	background: #222;
+	max-width: 300px;
+	color: #eee;
+	margin: 20px 0;
+}
+
+section#join button {
+	width: 200px;
+	font-size: 40px;
+	line-height: 1.8;
+	border-radius: 6px;
+	border: 0;
+	background: #1e90ff;
+	color: #fff;
+}
