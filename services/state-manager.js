@@ -35,7 +35,6 @@ class StateManager {
      * @return {boolean}
      */
     doesGameExist(gameId) {
-        gameId = String(gameId);
         return (this.games[gameId] instanceof Game);
     }
 
@@ -45,7 +44,6 @@ class StateManager {
      * @return {boolean}
      */
     doesPlayerExist(playerId) {
-        playerId = String(playerId);
         return (this.players[playerId] instanceof Player);
     }
 

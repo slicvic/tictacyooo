@@ -71,7 +71,7 @@ class Player {
      * @throws {Error}
      */
     set status(status) {
-        if (!(typeof status === 'string' && Player.Status[status])) {
+        if (!Player.Status[status]) {
             throw Error('Invalid argument status');
         }
 

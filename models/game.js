@@ -6,16 +6,6 @@ const math   = require('../helpers/math');
  */
 class Game {
     /**
-     * Check if a given cell is valid or not.
-     * @param  {number} cell
-     * @return {boolean}
-     */
-    static isValidCell(cell) {
-        cell = Number(cell);
-        return (cell >= 0 && cell <= 8);
-    }
-
-    /**
      * Create a new game.
      * @param  {Player} playerX
      * @param  {Player} playerO
@@ -60,7 +50,7 @@ class Game {
      * @throws {Error}
      */
     set status(status) {
-        if (!(typeof status === 'string' && Game.Status[status])) {
+        if (!Game.Status[status]) {
             throw Error('Invalid argument status');
         }
         this._status = status;
@@ -113,8 +103,6 @@ class Game {
      * @return {Player|null}
      */
     getPlayerById(playerId) {
-        playerId = String(playerId);
-
         if (playerId === this._playerX.id) {
             return this._playerX;
         }
@@ -133,7 +121,13 @@ class Game {
      * @throws {Error}
      */
     makeMove(playerId, cell) {
-        const player = this.getPlayerById(playerId);
+        cell = Number(cell);
+
+        if (!(cell >= 0 && cell <= 8))) {
+            throw Error("That's not a valid cell");
+        }
+
+        let player = this.getPlayerById(playerId);
 
         if (!player) {
             throw Error("You're not in the game");
@@ -141,10 +135,6 @@ class Game {
 
         if (!this.isPlayerTurn(player)) {
             throw Error("It's not your turn");
-        }
-
-        if (!Game.isValidCell(cell)) {
-            throw Error("That's not a valid cell");
         }
 
         if (this._grid[cell] !== '') {
