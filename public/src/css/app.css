@@ -59,3 +59,8 @@ section#join button {
 	background: #1e90ff;
 	color: #fff;
 }
+
+section#awaiting-opponent {
+	font-size: 30px;
+	padding: 40px 0;
+}
