@@ -22,7 +22,7 @@ class Game {
 
         this._id = String(Date.now());
         this._turn = (math.random() % 2 === 0) ? Game.Chip.X : Game.Chip.O;
-        this._grid = ['', '', '', '', '', '', '', '', ''];
+        this._board = ['', '', '', '', '', '', '', '', ''];
         this._playerX = playerX;
         this._playerO = playerO;
         this.status = Game.Status.INPROGRESS;
@@ -137,15 +137,15 @@ class Game {
             throw Error("It's not your turn");
         }
 
-        if (this._grid[cell] !== '') {
+        if (this._board[cell] !== '') {
             throw Error('That move was already made');
         }
 
         if (player.id === this._playerX.id) {
-            this._grid[cell] = Game.Chip.X;
+            this._board[cell] = Game.Chip.X;
             this._turn = Game.Chip.O;
         } else {
-            this._grid[cell] = Game.Chip.O;
+            this._board[cell] = Game.Chip.O;
             this._turn = Game.Chip.X;
         }
     }
