@@ -64,3 +64,38 @@ section#awaiting-opponent {
 	font-size: 30px;
 	padding: 40px 0;
 }
+
+section#game .cell {
+	display: inline-block;
+	border: 0;
+	margin-bottom: 4px;
+	background: #222;
+	color: #fff;
+	font-size: 60px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 90px;
+	width: 90px;
+	height: 90px;
+	font-weight: bold;
+}
+
+section#game h2 {
+	color: #f6b680;
+}
+
+section#game .scoreboard .playerX {
+	float: left;
+	margin-left: 50px;
+}
+
+section#game .scoreboard .playerO {
+	float: right;
+	margin-right: 50px;
+}
+
+section#game .scoreboard .chip {
+	font-size: 20px;
+	color: #ed2939;
+	font-weight: bold;
+}
