@@ -30,8 +30,8 @@ h1 {
 	margin: 0;
 }
 
-section {
-	/*display: none;*/
+[v-cloak] {
+  display: none;
 }
 
 section#join label {

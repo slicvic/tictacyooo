@@ -7,58 +7,62 @@
 	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/src/css/app.css">
 </head>
-<body id="app">
-	<header>
-		<h1>Tic Tac Yooo!</h1>
-	</header>
-	<section id="join" class="container" v-show="isStateJoin()">
-		<div class="row">
-			<div class="col-xs-12">
-				<label for="name">What's yooo name?</label>
+<body>
+	<div id="app" v-cloak>
+		<header>
+			<h1>Tic Tac Yooo!</h1>
+		</header>
+		<section id="join" class="container" v-show="isStateJoin()">
+			<div class="row">
+				<div class="col-xs-12">
+					<label for="name">What's yooo name?</label>
+				</div>
+				<div class="col-xs-12">
+					<input type="text" id="name" maxlength="8" required>
+				</div>
+				<div class="col-xs-12">
+					<button>join</button>
+				</div>
 			</div>
-			<div class="col-xs-12">
-				<input type="text" id="name" maxlength="8" required>
+		</section>
+		<section id="awaiting-opponent" class="container" v-show="isStateAwaitingOpponent()">
+			<div class="row">
+				<div class="col-xs-12">Awaiting opponent...</div>
 			</div>
-			<div class="col-xs-12">
-				<button>join</button>
+		</section>
+		<section id="game" v-show="isStatePlaying()">
+			<h2>Your Turn</h2>
+			<div class="scoreboard">
+				<div class="playerX"><span class="chip">X</span> <span>Me</span></div>
+				<div class="playerO"><span class="chip">O</span> <span>Manuel</span></div>
 			</div>
-		</div>
-	</section>
-	<section id="awaiting-opponent" class="container">
-		<div class="row">
-			<div class="col-xs-12">Awaiting opponent...</div>
-		</div>
-	</section>
-	<section id="game">
-		<h2>Your Turn</h2>
-		<div class="scoreboard">
-			<div class="playerX"><span class="chip">X</span> <span>Me</span></div>
-			<div class="playerO"><span class="chip">O</span> <span>Manuel</span></div>
-		</div>
-		<div class="clearfix"></div>
-		<div class="board">
-			<div>
-				<div class="cell">X</div>
-				<div class="cell">&nbsp;</div>
-				<div class="cell">&nbsp;</div>
+			<div class="clearfix"></div>
+			<div class="board">
+				<div>
+					<div class="cell">X</div>
+					<div class="cell">&nbsp;</div>
+					<div class="cell">&nbsp;</div>
+				</div>
+				<div>
+					<div class="cell">&nbsp;</div>
+					<div class="cell">&nbsp;</div>
+					<div class="cell">&nbsp;</div>
+				</div>
+				<div>
+					<div class="cell">&nbsp;</div>
+					<div class="cell">&nbsp;</div>
+					<div class="cell">&nbsp;</div>
+				</div>
 			</div>
-			<div>
-				<div class="cell">&nbsp;</div>
-				<div class="cell">&nbsp;</div>
-				<div class="cell">&nbsp;</div>
-			</div>
-			<div>
-				<div class="cell">&nbsp;</div>
-				<div class="cell">&nbsp;</div>
-				<div class="cell">&nbsp;</div>
-			</div>
-		</div>
-	</section>
-	<footer>
-		<small>0 players online, 0 games in progress</small><br/>
-		<small>Created by <a href="http://www.slicvic.com">slicvic.com</a></small>
-	</footer>
-	<script src="bower_components/vue/dist/vue.min.js"></script>
-	<script src="dist/js/app.js"></script>
+		</section>
+		<footer>
+			<small>
+				0 players online, 0 games in progress<br/>
+				Created by <a href="http://www.slicvic.com">slicvic.com</a>
+			</small>
+		</footer>
+		<script src="bower_components/vue/dist/vue.min.js"></script>
+		<script src="dist/js/app.js"></script>
+	</div>
 </body>
 </html>
