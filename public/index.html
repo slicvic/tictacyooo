@@ -18,10 +18,10 @@
 					<label for="name">What's yooo name?</label>
 				</div>
 				<div class="col-xs-12">
-					<input type="text" id="name" maxlength="8" required>
+					<input type="text" id="name" maxlength="8" v-model="player.name" v-on:keyup.enter="onJoin">
 				</div>
 				<div class="col-xs-12">
-					<button>join</button>
+					<button v-on:click="onJoin">join</button>
 				</div>
 			</div>
 		</section>
@@ -55,6 +55,7 @@
 				</div>
 			</div>
 		</section>
+		<div id="alert" v-cloak v-show="alert.show" v-on:click="hideAlert">{{ alert.message }}</div>
 		<footer>
 			<small>
 				0 players online, 0 games in progress<br/>

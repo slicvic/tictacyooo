@@ -18,7 +18,7 @@ header {
 }
 
 footer {
-	margin: 20px;
+	margin-top: 50px;
 }
 
 a {
@@ -98,4 +98,17 @@ section#game .scoreboard .chip {
 	font-size: 20px;
 	color: #ed2939;
 	font-weight: bold;
+}
+
+#alert {
+   	position: absolute;
+    top: 30%;
+    left: 50%;
+    margin-left: -150px;
+    width: 300px;
+    background: #F1C40F;
+    padding: 20px 0;
+    color: #000;
+    font-size: 20px;
+    border-radius: 6px;
 }

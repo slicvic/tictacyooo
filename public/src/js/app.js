@@ -7,9 +7,16 @@ var app = function (Vue) {
     return new Vue({
         el: '#app',
         data: {
-            state: STATE_JOIN
-        },
-        created: function() {
+            state: STATE_JOIN,
+
+            player: {
+                name: ''
+            },
+
+            alert: {
+                message: '',
+                show: false
+            }
         },
         methods: {
             isStateJoin() {
@@ -20,6 +27,16 @@ var app = function (Vue) {
             },
             isStatePlaying() {
                 return this.state === STATE_PLAYING;
+            },
+            onJoin() {
+                this.showAlert('Hi, ' + this.player.name + '!');
+            },
+            showAlert(message) {
+                this.alert.message = message;
+                this.alert.show = true;
+            },
+            hideAlert() {
+                this.alert.show = false;
             }
         }
     });
