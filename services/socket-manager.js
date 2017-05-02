@@ -96,14 +96,15 @@ class SocketManager {
     }
 
     /**
-     * Emit counts to all players.
+     * Emit counts to all clients.
      * @param {Object} responseData
      */
-    emitCounts({totalPlayers = 0, totalGames = 0} = {}) {
-        this.io.emit('counts', {
-            totalPlayers,
-            totalGames
-        });
+    emitCounts({players = 0, games = 0} = {}) {
+        let data = {
+            players,
+            games
+        };
+        this.io.emit('counts', data);
     }
 }
 

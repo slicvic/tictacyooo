@@ -7,6 +7,8 @@ var app = function (Vue) {
     return new Vue({
         el: '#app',
         data: {
+            socket: null,
+
             state: STATE_JOIN,
 
             player: {
@@ -16,7 +18,22 @@ var app = function (Vue) {
             alert: {
                 message: '',
                 show: false
+            },
+
+            counts: {
+                players: 0,
+                games: 0
             }
+        },
+        created() {
+            this.socket = io(SERVER_URL);
+
+            this.socket.on('connect', () => {
+                this.socket.on('counts', (data) => {
+                    this.counts.players = data.players;
+                    this.counts.games = data.games;
+                });
+            });
         },
         methods: {
             isStateJoin() {

@@ -15,8 +15,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 socketManager.onConnect(function(socket) {
     // Send counts
     this.emitCounts({
-        totalPlayers: stateManager.countPlayers(),
-        totalGames: stateManager.countGames()
+        players: stateManager.countPlayers(),
+        games: stateManager.countGames()
     });
 
     // Player signed in to the app
