@@ -31,14 +31,14 @@ h1 {
 }
 
 [v-cloak] {
-  display: none;
+  display: block;
 }
 
-section#join label {
+.join-card__label {
 	font-size: 30px;
 }
 
-section#join input {
+.join-card__input {
 	border: 2px solid #444;
 	font-size: 30px;
 	padding: 10px 0;
@@ -50,7 +50,7 @@ section#join input {
 	margin: 20px 0;
 }
 
-section#join button {
+.join-card__button {
 	width: 200px;
 	font-size: 40px;
 	line-height: 1.8;
@@ -60,12 +60,12 @@ section#join button {
 	color: #fff;
 }
 
-section#awaiting-opponent {
+.awaiting-opponent-card {
 	font-size: 30px;
 	padding: 40px 0;
 }
 
-section#game .cell {
+.game-card__board__cell {
 	display: inline-block;
 	border: 0;
 	margin-bottom: 4px;
@@ -80,27 +80,29 @@ section#game .cell {
 	font-weight: bold;
 }
 
-section#game h2 {
+.game-card__h2 {
 	color: #f6b680;
 }
 
-section#game .scoreboard .playerX {
+.game-card__scoreboard__player--x {
 	float: left;
-	margin-left: 50px;
 }
 
-section#game .scoreboard .playerO {
+.game-card__scoreboard__player--o {
 	float: right;
+}
+
+.game-card__scoreboard__player {
 	margin-right: 50px;
 }
 
-section#game .scoreboard .chip {
+.game-card__scoreboard__chip {
 	font-size: 20px;
 	color: #ed2939;
 	font-weight: bold;
 }
 
-#toast {
+.toast {
    	position: absolute;
     top: 30%;
     left: 50%;
