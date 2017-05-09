@@ -100,14 +100,14 @@ section#game .scoreboard .chip {
 	font-weight: bold;
 }
 
-#alert {
+#toast {
    	position: absolute;
     top: 30%;
     left: 50%;
     margin-left: -150px;
     width: 300px;
     background: #F1C40F;
-    padding: 20px 0;
+    padding: 8px;
     color: #000;
     font-size: 20px;
     border-radius: 6px;
