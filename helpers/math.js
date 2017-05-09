@@ -1,7 +1,7 @@
 /**
  * A math utility.
  */
-class Math {
+class MathHelper {
 	/**
 	 * Generate a random number between min and max.
 	 * @param  {Number} [min=1]
@@ -13,4 +13,4 @@ class Math {
 	}
 }
 
-exports.math = new Math();
+module.exports = new MathHelper();
