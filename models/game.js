@@ -1,5 +1,5 @@
-const Player = require('./player');
-const math   = require('../helpers/math');
+const Player     = require('./player');
+const mathHelper = require('../helpers/math');
 
 /**
  * A game object.
@@ -21,7 +21,7 @@ class Game {
         }
 
         this._id = String(Date.now());
-        this._turn = (math.random() % 2 === 0) ? Game.Chip.X : Game.Chip.O;
+        this._turn = (mathHelper.random() % 2 === 0) ? Game.Chip.X : Game.Chip.O;
         this._board = ['', '', '', '', '', '', '', '', ''];
         this._playerX = playerX;
         this._playerO = playerO;
