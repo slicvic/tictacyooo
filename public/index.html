@@ -55,14 +55,14 @@
 				</div>
 			</div>
 		</section>
-		<div id="alert" v-cloak v-show="alert.show" v-on:click="hideAlert">{{ alert.message }}</div>
+		<div id="toast" v-cloak v-show="toast.show" v-on:click="hideToast">{{ toast.message }}</div>
 		<footer>
 			<small>
 				{{ counts.players }} players online, {{ counts.games }} games in progress<br/>
 				Created by <a href="http://www.slicvic.com">slicvic.com</a>
 			</small>
 		</footer>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+		<script src="socket.io.min.js"></script>
 		<script src="bower_components/vue/dist/vue.min.js"></script>
 		<script src="dist/js/app.js"></script>
 	</div>

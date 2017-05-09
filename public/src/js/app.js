@@ -15,7 +15,7 @@ var app = function (Vue) {
                 name: ''
             },
 
-            alert: {
+            toast: {
                 message: '',
                 show: false
             },
@@ -46,14 +46,18 @@ var app = function (Vue) {
                 return this.state === STATE_PLAYING;
             },
             onJoin() {
-                this.showAlert('Hi, ' + this.player.name + '!');
+                this.socket.emit('player.join', {
+                    name: this.player.name
+                });
+                
+                this.showToast('Hi, ' + this.player.name + '!');
             },
-            showAlert(message) {
-                this.alert.message = message;
-                this.alert.show = true;
+            showToast(message) {
+                this.toast.message = message;
+                this.toast.show = true;
             },
-            hideAlert() {
-                this.alert.show = false;
+            hideToast() {
+                this.toast.show = false;
             }
         }
     });
