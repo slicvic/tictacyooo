@@ -11,6 +11,7 @@ const stateManager  = require('./services/state-manager')();
 httpServer.listen(port);
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'node_modules/socket.io-client/dist')));
 
 socketManager.onConnect(function(socket) {
     // Send counts
