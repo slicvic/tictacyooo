@@ -123,7 +123,7 @@ class Game {
     makeMove(playerId, cell) {
         cell = Number(cell);
 
-        if (!(cell >= 0 && cell <= 8)) {
+        if (!(cell >= 1 && cell <= 9)) {
             throw Error("That's not a valid cell");
         }
 
@@ -137,15 +137,17 @@ class Game {
             throw Error("It's not your turn");
         }
 
-        if (this._board[cell] !== '') {
+        let cellIndex = cell - 1;
+
+        if (this._board[cellIndex] !== '') {
             throw Error('That move was already made');
         }
 
         if (player.id === this._playerX.id) {
-            this._board[cell] = Game.Chip.X;
+            this._board[cellIndex] = Game.Chip.X;
             this._turn = Game.Chip.O;
         } else {
-            this._board[cell] = Game.Chip.O;
+            this._board[cellIndex] = Game.Chip.O;
             this._turn = Game.Chip.X;
         }
     }
