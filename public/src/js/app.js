@@ -11,7 +11,8 @@ var app = function (Vue) {
 
             state: STATE_JOIN,
 
-            player: {
+            user: {
+                id: '',
                 name: ''
             },
 
@@ -23,6 +24,20 @@ var app = function (Vue) {
             counts: {
                 players: 0,
                 games: 0
+            },
+
+            game: {
+                players: {
+                    me: {
+                        chip: '',
+                    },
+                    opponent: {
+                        id: '',
+                        name: '',
+                        chip: ''
+                    }
+                },
+                turn: ''
             }
         },
         created() {
@@ -34,8 +49,66 @@ var app = function (Vue) {
                     this.counts.games = data.games;
                 });
             });
+
+            this.socket.on('player.joinResponse', (response) => {
+                if (response.success) {
+                    this.user.id = response.playerId;
+                    this.state = STATE_AWAITING_OPPONENT;
+                    this.socket.emit('player.findOpponent', {
+                        playerId: this.user.id
+                    });
+                } else {
+                    this.showToast(response.message);
+                }
+            });
+
+            this.socket.on('player.findOpponentResponse', (response) => {
+                if (!response.success) {
+                    this.state = STATE_JOIN;
+                    this.showToast(response.message);
+                }
+            });
+
+            this.socket.on('game.start', (data) => {
+                this.game.players.me.chip = data.me.chip;
+                this.game.players.opponent.id = data.opponent.id;
+                this.game.players.opponent.name = data.opponent.name;
+                this.game.players.opponent.chip = data.opponent.chip;
+                this.game.turn = data.turn;
+                this.state = STATE_PLAYING;
+            });
         },
         methods: {
+            onJoin() {
+                this.hideToast();
+
+                try {
+                    this.validateName(this.user.name);
+                } catch(e) {
+                    return this.showToast(e.message);
+                }
+
+                this.socket.emit('player.join', {
+                    name: this.user.name
+                });
+            },
+            showToast(message) {
+                this.toast.message = message;
+                this.toast.show = true;
+            },
+            hideToast() {
+                this.toast.show = false;
+            },
+            validateName(name) {
+                if (!(typeof name === 'string' && name.length >= 4)) {
+                    throw new Error('Name must be at least 5 characters long, yo!');
+                }
+            },
+            makeMove(cellNumber) {
+                alert(cellNumber);
+            }
+        },
+        computed: {
             isStateJoin() {
                 return this.state === STATE_JOIN;
             },
@@ -45,19 +118,8 @@ var app = function (Vue) {
             isStatePlaying() {
                 return this.state === STATE_PLAYING;
             },
-            onJoin() {
-                this.socket.emit('player.join', {
-                    name: this.player.name
-                });
-                
-                this.showToast('Hi, ' + this.player.name + '!');
-            },
-            showToast(message) {
-                this.toast.message = message;
-                this.toast.show = true;
-            },
-            hideToast() {
-                this.toast.show = false;
+            isMyTurn() {
+                return (this.game.turn === this.game.players.me.chip);
             }
         }
     });

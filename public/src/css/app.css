@@ -31,7 +31,7 @@ h1 {
 }
 
 [v-cloak] {
-  display: block;
+  display: none;
 }
 
 .join-card__label {
@@ -80,7 +80,7 @@ h1 {
 	font-weight: bold;
 }
 
-.game-card__h2 {
+.game-card__turn {
 	color: #f6b680;
 }
 

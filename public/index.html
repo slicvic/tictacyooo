@@ -12,46 +12,46 @@
 		<header>
 			<h1>Tic Tac Yooo!</h1>
 		</header>
-		<section class="join-card container" v-show="isStateJoin()">
+		<section class="join-card container" v-show="isStateJoin">
 			<div class="row">
 				<div class="col-xs-12">
 					<label class="join-card__label">What's yooo name?</label>
 				</div>
 				<div class="col-xs-12">
-					<input type="text" class="join-card__input" maxlength="8" v-model="player.name" v-on:keyup.enter="onJoin">
+					<input type="text" class="join-card__input" maxlength="8" v-model="user.name" v-on:keyup.enter="onJoin">
 				</div>
 				<div class="col-xs-12">
 					<button class="join-card__button" v-on:click="onJoin">join</button>
 				</div>
 			</div>
 		</section>
-		<section class="awaiting-opponent-card container" v-show="isStateAwaitingOpponent()">
+		<section class="awaiting-opponent-card container" v-show="isStateAwaitingOpponent">
 			<div class="row">
 				<div class="col-xs-12">Awaiting opponent...</div>
 			</div>
 		</section>
-		<section class="game-card" v-show="isStatePlaying()">
-			<h2 class="game-card__h2">Your Turn</h2>
+		<section class="game-card" v-show="isStatePlaying">
+			<h2 class="game-card__turn" v-show="isMyTurn">Your Turn</h2>
 			<div class="game-card__scoreboard">
-				<div class="game-card__scoreboard__player game-card__scoreboard__player--x"><span class="game-card__scoreboard__chip">X</span> <span>Me</span></div>
-				<div class="game-card__scoreboard__player game-card__scoreboard__player--o"><span class="game-card__scoreboard__chip">O</span> <span>Manuel</span></div>
+				<div class="game-card__scoreboard__player game-card__scoreboard__player--x"><span class="game-card__scoreboard__chip">{{ game.players.me.chip }}</span> <span>Me</span></div>
+				<div class="game-card__scoreboard__player game-card__scoreboard__player--o"><span class="game-card__scoreboard__chip">{{ game.players.opponent.chip }}</span> <span>{{ game.players.opponent.name }}</span></div>
 			</div>
 			<div class="clearfix"></div>
 			<div class="game-card__board">
 				<div>
-					<div class="game-card__board__cell">X</div>
-					<div class="game-card__board__cell">&nbsp;</div>
-					<div class="game-card__board__cell">&nbsp;</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(1)">&nbsp;</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(2)">&nbsp;</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(3)">&nbsp;</div>
 				</div>
 				<div>
-					<div class="game-card__board__cell">&nbsp;</div>
-					<div class="game-card__board__cell">&nbsp;</div>
-					<div class="game-card__board__cell">&nbsp;</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(4)">&nbsp;</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(5)">&nbsp;</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(6)">&nbsp;</div>
 				</div>
 				<div>
-					<div class="game-card__board__cell">&nbsp;</div>
-					<div class="game-card__board__cell">&nbsp;</div>
-					<div class="game-card__board__cell">&nbsp;</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(7)">&nbsp;</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(8)">&nbsp;</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(9)">&nbsp;</div>
 				</div>
 			</div>
 		</section>
