@@ -31,7 +31,7 @@
 			</div>
 		</section>
 		<section class="game-card" v-show="isStatePlaying">
-			<h2 class="game-card__turn" v-show="isMyTurn">Your Turn</h2>
+			<h2 class="game-card__turn" v-show="game.isMyTurn">Your Turn</h2>
 			<div class="game-card__scoreboard">
 				<div class="game-card__scoreboard__player game-card__scoreboard__player--x"><span class="game-card__scoreboard__chip">{{ game.players.me.chip }}</span> <span>Me</span></div>
 				<div class="game-card__scoreboard__player game-card__scoreboard__player--o"><span class="game-card__scoreboard__chip">{{ game.players.opponent.chip }}</span> <span>{{ game.players.opponent.name }}</span></div>
@@ -39,19 +39,19 @@
 			<div class="clearfix"></div>
 			<div class="game-card__board">
 				<div>
-					<div class="game-card__board__cell" v-on:click="makeMove(1)">&nbsp;</div>
-					<div class="game-card__board__cell" v-on:click="makeMove(2)">&nbsp;</div>
-					<div class="game-card__board__cell" v-on:click="makeMove(3)">&nbsp;</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(1)">{{ game.board[0] }}</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(2)">{{ game.board[1] }}</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(3)">{{ game.board[2] }}</div>
 				</div>
 				<div>
-					<div class="game-card__board__cell" v-on:click="makeMove(4)">&nbsp;</div>
-					<div class="game-card__board__cell" v-on:click="makeMove(5)">&nbsp;</div>
-					<div class="game-card__board__cell" v-on:click="makeMove(6)">&nbsp;</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(4)">{{ game.board[3] }}</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(5)">{{ game.board[4] }}</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(6)">{{ game.board[5] }}</div>
 				</div>
 				<div>
-					<div class="game-card__board__cell" v-on:click="makeMove(7)">&nbsp;</div>
-					<div class="game-card__board__cell" v-on:click="makeMove(8)">&nbsp;</div>
-					<div class="game-card__board__cell" v-on:click="makeMove(9)">&nbsp;</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(7)">{{ game.board[6] }}</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(8)">{{ game.board[7] }}</div>
+					<div class="game-card__board__cell" v-on:click="makeMove(9)">{{ game.board[8] }}</div>
 				</div>
 			</div>
 		</section>

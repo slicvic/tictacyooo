@@ -73,8 +73,9 @@ socketManager.onConnect(function(socket) {
             const player = stateManager.players[data.playerId];
             const opponent = (player.id === game.playerX.id) ? game.playerO : game.playerX;
             try {
-                game.makeMove(player.id, cell);
+                game.makeMove(player.id, data.cell);
                 this.emitMoveResponse(socket, {
+                    cell: data.cell,
                     success: true
                 });
                 // Notify opponent

@@ -68,28 +68,32 @@ class StateManager {
 
     		playerX.socket.emit('game.start', {
     			gameId: game.id,
-    			turn: game.turn,
-    			me: {
-    				chip: Game.Chip.X
-    			},
-    			opponent: {
-    				chip: Game.Chip.O,
-    				id: game.playerO.id,
-    				name: game.playerO.name
-    			}
+    			isMyTurn: (game.turn === Game.Chip.X),
+                players: {
+                    me: {
+                        chip: Game.Chip.X
+                    },
+                    opponent: {
+                        chip: Game.Chip.O,
+                        id: game.playerO.id,
+                        name: game.playerO.name
+                    }
+                }
     		});
 
     		playerO.socket.emit('game.start', {
     			gameId: game.id,
-    			turn: game.turn,
-    			me: {
-    				chip: Game.Chip.O
-    			},
-    			opponent: {
-    				chip: Game.Chip.X,
-    				id: playerX.id,
-    				name: playerX.name
-    			}
+                isMyTurn: (game.turn === Game.Chip.O),
+    			players: {
+                    me: {
+        				chip: Game.Chip.O
+        			},
+        			opponent: {
+        				chip: Game.Chip.X,
+        				id: playerX.id,
+        				name: playerX.name
+        			}
+                }
     		});
 
             this.games[game.id] = game;

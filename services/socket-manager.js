@@ -77,8 +77,9 @@ class SocketManager {
      * @param {Object} socket
      * @param {Object} responseData
      */
-    emitMoveResponse(socket, {success = false, message = ''} = {}) {
+    emitMoveResponse(socket, {success = false, message = '', cell} = {}) {
         socket.emit('player.moveResponse', {
+            cell,
             success,
             message
         });
@@ -90,7 +91,7 @@ class SocketManager {
      * @param {Object} responseData
      */
     emitOpponentMove(socket, {cell = ''} = {}) {
-        socket.emit('player.opponentMove', {
+        socket.emit('game.opponentMove', {
             cell
         });
     }

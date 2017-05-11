@@ -27,6 +27,9 @@ var app = function (Vue) {
             },
 
             game: {
+                id: '',
+                isMyTurn: false,
+                board: ['', '', '', '', '', '', '', '', ''],
                 players: {
                     me: {
                         chip: '',
@@ -36,8 +39,7 @@ var app = function (Vue) {
                         name: '',
                         chip: ''
                     }
-                },
-                turn: ''
+                }
             }
         },
         created() {
@@ -69,13 +71,29 @@ var app = function (Vue) {
                 }
             });
 
+            this.socket.on('player.moveResponse', (response) => {
+                if (response.success) {
+                    this.game.isMyTurn = false;
+                    this.game.board[response.cell - 1] = this.game.players.me.chip;
+                } else {
+                    this.showToast(response.message);
+                }
+            });
+
             this.socket.on('game.start', (data) => {
-                this.game.players.me.chip = data.me.chip;
-                this.game.players.opponent.id = data.opponent.id;
-                this.game.players.opponent.name = data.opponent.name;
-                this.game.players.opponent.chip = data.opponent.chip;
-                this.game.turn = data.turn;
+                this.game.id = data.gameId;
+                this.game.isMyTurn = data.isMyTurn;
+                this.game.players.me.chip = data.players.me.chip;
+                this.game.players.opponent.id = data.players.opponent.id;
+                this.game.players.opponent.name = data.players.opponent.name;
+                this.game.players.opponent.chip = data.players.opponent.chip;
+                this.game.board = ['', '', '', '', '', '', '', '', ''];
                 this.state = STATE_PLAYING;
+            });
+
+            this.socket.on('game.opponentMove', (response) => {
+                this.game.isMyTurn = true;
+                this.game.board[response.cell - 1] = this.game.players.opponent.chip;
             });
         },
         methods: {
@@ -104,8 +122,16 @@ var app = function (Vue) {
                     throw new Error('Name must be at least 5 characters long, yo!');
                 }
             },
-            makeMove(cellNumber) {
-                alert(cellNumber);
+            makeMove(cell) {
+                if (this.game.isMyTurn) {
+                    this.socket.emit('player.move', {
+                        gameId: this.game.id,
+                        playerId: this.user.id,
+                        cell: cell
+                    });
+                } else {
+                    this.showToast("It's not your turn!");
+                }
             }
         },
         computed: {
@@ -117,9 +143,6 @@ var app = function (Vue) {
             },
             isStatePlaying() {
                 return this.state === STATE_PLAYING;
-            },
-            isMyTurn() {
-                return (this.game.turn === this.game.players.me.chip);
             }
         }
     });
