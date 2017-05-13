@@ -3,6 +3,14 @@
  */
 class SocketManager {
     /**
+     * Generate a unique socket identifier.
+     * @param {Object} socket
+     */
+    static generateSocketId(socket) {
+        return Buffer.from(socket.request.connection.remoteAddress + socket.request.headers['user-agent']).toString('base64');
+    }
+
+    /**
      * Create a new instance.
      * @param {Object} io Instance of Socket.io
      */
@@ -16,8 +24,15 @@ class SocketManager {
      */
     onConnect(callback) {
         this.io.on('connect', (socket) => {
-            callback.call(this, socket);
+            callback.call(this, socket, SocketManager.generateSocketId(socket));
         });
+    }
+
+    /**
+     * Check when a player disconnects.
+     */
+    onDisconnect(socket, callback) {
+        socket.on('disconnect', callback.bind(this));
     }
 
     /**
@@ -88,7 +103,7 @@ class SocketManager {
     /**
      * Notify a player of his opponent's move.
      * @param {Object} socket
-     * @param {Object} responseData
+     * @param {Object} data
      */
     emitOpponentMove(socket, {position = ''} = {}) {
         socket.emit('game.opponentMove', {
@@ -97,14 +112,23 @@ class SocketManager {
     }
 
     /**
+     * Notify a player if his opponent leaves the game.
+     * @param {Object} socket
+     */
+    emitOpponentLeft(socket) {
+        socket.emit('game.opponentLeft', {});
+    }
+
+    /**
      * Emit stats to all connected sockets.
-     * @param {Object} responseData
+     * @param {Object} data
      */
     emitStats({players = 0, games = 0} = {}) {
         const data = {
             players,
             games
         };
+
         this.io.emit('stats', data);
     }
 }

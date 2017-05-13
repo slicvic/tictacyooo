@@ -93,6 +93,11 @@ const app = function (Vue) {
                 this.game.board = ['', '', '', '', '', '', '', '', ''];
                 this.state = STATE_PLAYING;
             });
+
+            this.socket.on('game.opponentLeft', () => {
+                alert(2);
+                this.showToast('Your opponent has left the game!');
+            });
         },
         methods: {
             onJoin() {

@@ -4,38 +4,33 @@
 class Player {
     /**
      * Create a new player.
+     * @param  {string} id
      * @param  {string} name
      * @param  {Object} socket
      * @return {Player}
      */
-    static create(name, socket) {
-        return new Player(name, Player.Status.Idle, socket);
+    static create(id, name, socket) {
+        return new Player(id, name, Player.Status.Idle, socket);
     }
 
     /**
      * Create a new player.
+     * @param  {string} id
      * @param  {string} name
      * @param  {string} status
      * @param  {Object} socket
      * @throws {Error}
      */
-    constructor(name, status, socket) {
+    constructor(id, name, status, socket) {
         if (!(typeof name === 'string' && name.length >= Player.NAME_LENGTH_MIN && name.length <= Player.NAME_LENGTH_MAX)) {
             throw Error(`Yo name must be between ${Player.NAME_LENGTH_MIN} and ${Player.NAME_LENGTH_MAX} characters!`);
         }
 
-        if (!(
-            typeof socket === 'object'
-            && typeof socket.request === 'object'
-            && typeof socket.request.connection === 'object'
-            && typeof socket.request.connection.remoteAddress === 'string'
-            && typeof socket.request.headers === 'object'
-            && typeof socket.request.headers['user-agent'] === 'string'
-        )) {
+        if (!(typeof socket === 'object')) {
             throw Error('Invalid argument socket');
         }
 
-        this._id = Buffer.from(socket.request.connection.remoteAddress + socket.request.headers['user-agent']).toString('base64');
+        this._id = id;
         this._name = name;
         this._socket = socket;
         this.status = status;
@@ -93,7 +88,8 @@ Player.NAME_LENGTH_MAX = 10;
 Player.Status = {
     Idle: 'Idle',
     AwaitingOpponent: 'AwaitingOpponent',
-    Playing: 'Playing'
+    Playing: 'Playing',
+    Away: 'Away'
 };
 
 module.exports = Player;

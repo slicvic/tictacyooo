@@ -5,6 +5,7 @@ const app        = express();
 const httpServer = require('http').Server(app);
 const io         = require('socket.io')(httpServer);
 const Player     = require('./models/player');
+const Game       = require('./models/game');
 const socketManager = require('./services/socket-manager')(io);
 const stateManager  = require('./services/state-manager')();
 
@@ -13,19 +14,34 @@ httpServer.listen(port);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules/socket.io-client/dist')));
 
-socketManager.onConnect(function(socket) {
+socketManager.onConnect(function(socket, playerId) {
     this.emitStats({
         players: stateManager.countPlayers(),
         games: stateManager.countGames()
     });
-    
+
+    this.onDisconnect(socket, () => {
+        if (stateManager.players[playerId] instanceof Player) {
+            stateManager.players[playerId].status = Player.Status.Away;
+        }
+
+        for (let gameId in stateManager.games) {
+            const game = stateManager.games[gameId];
+            if (game.getPlayerById(playerId)) {
+                game.status = Game.Status.Over;
+                const opponent = (playerId === game.playerO.id) ? game.playerX : game.playerO;
+                this.emitOpponentLeft(opponent.socket);
+            }
+        }
+    });
+
     // Player signs in to the game
     this.onJoin(socket, (data) => {
         try {
             if (!(typeof data === 'object' && typeof data.name === 'string')) {
                 throw Error('Invalid request data');
             }
-            const player = Player.create(data.name, socket);
+            const player = Player.create(playerId, data.name, socket);
             stateManager.players[player.id] = player;
             this.emitJoinResponse(socket, {
                 success: true,
