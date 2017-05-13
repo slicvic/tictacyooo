@@ -14,34 +14,35 @@ httpServer.listen(port);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules/socket.io-client/dist')));
 
-socketManager.onConnect(function(socket, playerId) {
+socketManager.onConnect(function(socket, socketId) {
     this.emitStats({
         players: stateManager.countPlayers(),
         games: stateManager.countGames()
     });
 
+    // Player disconnected
     this.onDisconnect(socket, () => {
-        if (stateManager.players[playerId] instanceof Player) {
-            stateManager.players[playerId].status = Player.Status.Away;
+        if (stateManager.players[socketId] instanceof Player) {
+            stateManager.players[socketId].status = Player.Status.Away;
         }
 
         for (let gameId in stateManager.games) {
             const game = stateManager.games[gameId];
-            if (game.getPlayerById(playerId)) {
+            if (game.findPlayerById(socketId)) {
+                const opponent = (socketId === game.playerO.id) ? game.playerX : game.playerO;
                 game.status = Game.Status.Over;
-                const opponent = (playerId === game.playerO.id) ? game.playerX : game.playerO;
                 this.emitOpponentLeft(opponent.socket);
             }
         }
     });
 
-    // Player signs in to the game
+    // Player entered game
     this.onJoin(socket, (data) => {
         try {
             if (!(typeof data === 'object' && typeof data.name === 'string')) {
                 throw Error('Invalid request data');
             }
-            const player = Player.create(playerId, data.name, socket);
+            const player = Player.create(socketId, data.name, socket);
             stateManager.players[player.id] = player;
             this.emitJoinResponse(socket, {
                 success: true,
@@ -73,7 +74,7 @@ socketManager.onConnect(function(socket, playerId) {
         }
     });
 
-    // Player makes a move
+    // Player made a move
     this.onMove(socket, (data) => {
         if (typeof data === 'object'
             && typeof data.gameId === 'string'

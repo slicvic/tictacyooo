@@ -95,7 +95,6 @@ const app = function (Vue) {
             });
 
             this.socket.on('game.opponentLeft', () => {
-                alert(2);
                 this.showToast('Your opponent has left the game!');
             });
         },

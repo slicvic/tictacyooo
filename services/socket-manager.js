@@ -3,7 +3,7 @@
  */
 class SocketManager {
     /**
-     * Generate a unique socket identifier.
+     * Generate a unique socket id.
      * @param {Object} socket
      */
     static generateSocketId(socket) {

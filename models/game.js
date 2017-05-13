@@ -100,9 +100,9 @@ class Game {
     /**
      * Get player by id.
      * @param  {string} playerId
-     * @return {Player|null}
+     * @return {Player|false}
      */
-    getPlayerById(playerId) {
+    findPlayerById(playerId) {
         if (playerId === this._playerX.id) {
             return this._playerX;
         }
@@ -111,7 +111,7 @@ class Game {
             return this._playerO;
         }
 
-        return null;
+        return false;
     }
 
     /**
@@ -127,7 +127,7 @@ class Game {
             throw Error('Bad move yo, square out of bounds!');
         }
 
-        const player = this.getPlayerById(playerId);
+        const player = this.findPlayerById(playerId);
 
         if (!player) {
             throw Error("Chill out yo, you're not in this game!");

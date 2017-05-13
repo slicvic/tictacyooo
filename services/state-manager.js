@@ -9,8 +9,24 @@ class StateManager {
      * Create a new instance.
      */
     constructor() {
-        this.players = {};
-        this.games = {};
+        this._players = {};
+        this._games = {};
+    }
+
+    /**
+     * Get players.
+     * @return {Object}
+     */
+    get players() {
+        return this._players;
+    }
+
+    /**
+     * Get games.
+     * @return {Object}
+     */
+    get games() {
+        return this._games;
     }
 
     /**
@@ -18,7 +34,7 @@ class StateManager {
      * @return {number}
      */
     countGames() {
-        return Object.keys(this.games).length;
+        return Object.keys(this._games).length;
     }
 
     /**
@@ -26,7 +42,7 @@ class StateManager {
      * @return {number}
      */
     countPlayers() {
-        return Object.keys(this.players).length;
+        return Object.keys(this._players).length;
     }
 
     /**
@@ -35,7 +51,7 @@ class StateManager {
      * @return {boolean}
      */
     doesGameExist(gameId) {
-        return (this.games[gameId] instanceof Game);
+        return (this._games[gameId] instanceof Game);
     }
 
     /**
@@ -44,7 +60,7 @@ class StateManager {
      * @return {boolean}
      */
     doesPlayerExist(playerId) {
-        return (this.players[playerId] instanceof Player);
+        return (this._players[playerId] instanceof Player);
     }
 
     /**
@@ -56,12 +72,12 @@ class StateManager {
     		throw 'Invalid argument playerX';
     	}
 
-    	for (let playerId in this.players) {
-    		if (playerId === playerX.id || this.players[playerId].status !== Player.Status.AwaitingOpponent) {
+    	for (let playerId in this._players) {
+    		if (playerId === playerX.id || this._players[playerId].status !== Player.Status.AwaitingOpponent) {
     			continue;
     		}
 
-    		const playerO = this.players[playerId];
+    		const playerO = this._players[playerId];
     		const game = new Game(playerX, playerO);
     		playerX.status = Player.Status.Playing;
     		playerO.status = Player.Status.Playing;
@@ -96,7 +112,7 @@ class StateManager {
                 }
     		});
 
-            this.games[game.id] = game;
+            this._games[game.id] = game;
 
     		break;
     	}
