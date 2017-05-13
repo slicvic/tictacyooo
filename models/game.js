@@ -124,23 +124,23 @@ class Game {
         position = Number(position);
 
         if (!(position >= 1 && position <= 9)) {
-            throw Error('Bad move, square out of bounds!');
+            throw Error('Bad move yo, square out of bounds!');
         }
 
         const player = this.getPlayerById(playerId);
 
         if (!player) {
-            throw Error("Chill out, you're not in this game!");
+            throw Error("Chill out yo, you're not in this game!");
         }
 
         if (!this.isPlayerTurn(player)) {
-            throw Error("Chill out, it's not your turn yet!");
+            throw Error("Chill out yo, it's not your turn yet!");
         }
 
         const boardIndex = (position - 1);
 
         if (this._board[boardIndex] !== Game.Marker.Empty) {
-            throw Error('Too late, square already marked!');
+            throw Error('Too late yo, square already marked!');
         }
 
         if (player.id === this._playerX.id) {
