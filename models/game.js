@@ -25,7 +25,7 @@ class Game {
         this._board = ['', '', '', '', '', '', '', '', ''];
         this._playerX = playerX;
         this._playerO = playerO;
-        this.status = Game.Status.INPROGRESS;
+        this.status = Game.Status.InProgress;
     }
 
     /**
@@ -117,17 +117,17 @@ class Game {
     /**
      * Make a move.
      * @param  {string} playerId
-     * @param  {number} cell
+     * @param  {number} position
      * @throws {Error}
      */
-    makeMove(playerId, cell) {
-        cell = Number(cell);
+    makeMove(playerId, position) {
+        position = Number(position);
 
-        if (!(cell >= 1 && cell <= 9)) {
-            throw Error('Bad move, invalid square!');
+        if (!(position >= 1 && position <= 9)) {
+            throw Error('Bad move, square out of bounds!');
         }
 
-        let player = this.getPlayerById(playerId);
+        const player = this.getPlayerById(playerId);
 
         if (!player) {
             throw Error("Chill out, you're not in this game!");
@@ -137,30 +137,31 @@ class Game {
             throw Error("Chill out, it's not your turn yet!");
         }
 
-        let cellIndex = cell - 1;
+        const boardIndex = (position - 1);
 
-        if (this._board[cellIndex] !== '') {
+        if (this._board[boardIndex] !== Game.Marker.Empty) {
             throw Error('Too late, square already marked!');
         }
 
         if (player.id === this._playerX.id) {
-            this._board[cellIndex] = Game.Marker.X;
+            this._board[boardIndex] = Game.Marker.X;
             this._turn = Game.Marker.O;
         } else {
-            this._board[cellIndex] = Game.Marker.O;
+            this._board[boardIndex] = Game.Marker.O;
             this._turn = Game.Marker.X;
         }
     }
 }
 
 Game.Status = {
-    INPROGRESS: 'INPROGRESS',
-    OVER: 'OVER'
+    InProgress: 'InProgress',
+    Over: 'Over'
 };
 
 Game.Marker = {
     X: 'X',
-    O: 'O'
+    O: 'O',
+    Empty: ''
 };
 
 module.exports = Game;
