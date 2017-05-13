@@ -74,9 +74,9 @@ class StateManager {
                         marker: Game.Marker.X
                     },
                     opponent: {
-                        marker: Game.Marker.O,
                         id: game.playerO.id,
-                        name: game.playerO.name
+                        name: game.playerO.name,
+                        marker: Game.Marker.O
                     }
                 }
     		});
@@ -89,9 +89,9 @@ class StateManager {
         				marker: Game.Marker.O
         			},
         			opponent: {
-        				marker: Game.Marker.X,
         				id: playerX.id,
-        				name: playerX.name
+        				name: playerX.name,
+                        marker: Game.Marker.X
         			}
                 }
     		});

@@ -21,7 +21,7 @@ var app = function (Vue) {
                 show: false
             },
 
-            counts: {
+            stats: {
                 players: 0,
                 games: 0
             },
@@ -46,9 +46,9 @@ var app = function (Vue) {
             this.socket = io(SERVER_URL);
 
             this.socket.on('connect', () => {
-                this.socket.on('counts', (data) => {
-                    this.counts.players = data.players;
-                    this.counts.games = data.games;
+                this.socket.on('stats', (data) => {
+                    this.stats.players = data.players;
+                    this.stats.games = data.games;
                 });
             });
 
@@ -74,7 +74,7 @@ var app = function (Vue) {
             this.socket.on('player.moveResponse', (response) => {
                 if (response.success) {
                     this.game.isMyTurn = false;
-                    this.game.board[response.cell - 1] = this.game.players.me.marker;
+                    this.game.board[response.position - 1] = this.game.players.me.marker;
                 } else {
                     this.showToast(response.message);
                 }
@@ -93,7 +93,7 @@ var app = function (Vue) {
 
             this.socket.on('game.opponentMove', (response) => {
                 this.game.isMyTurn = true;
-                this.game.board[response.cell - 1] = this.game.players.opponent.marker;
+                this.game.board[response.position - 1] = this.game.players.opponent.marker;
             });
         },
         methods: {
@@ -111,11 +111,11 @@ var app = function (Vue) {
             hideToast() {
                 this.toast.show = false;
             },
-            makeMove(cell) {
+            makeMove(position) {
                 this.socket.emit('player.move', {
                     gameId: this.game.id,
                     playerId: this.user.id,
-                    cell: cell
+                    position: position
                 });
             }
         },

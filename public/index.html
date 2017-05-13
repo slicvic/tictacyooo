@@ -33,8 +33,8 @@
 		<section class="game-card" v-show="isStatePlaying">
 			<h2 class="game-card__turn" v-show="game.isMyTurn">Your Turn</h2>
 			<div class="game-card__scoreboard">
-				<div class="game-card__scoreboard__player game-card__scoreboard__player--x"><span class="game-card__scoreboard__mark">{{ game.players.me.mark }}</span> <span>Me</span></div>
-				<div class="game-card__scoreboard__player game-card__scoreboard__player--o"><span class="game-card__scoreboard__mark">{{ game.players.opponent.mark }}</span> <span>{{ game.players.opponent.name }}</span></div>
+				<div class="game-card__scoreboard__player game-card__scoreboard__player--x"><span class="game-card__scoreboard__marker">{{ game.players.me.marker }}</span> <span>Me</span></div>
+				<div class="game-card__scoreboard__player game-card__scoreboard__player--o"><span class="game-card__scoreboard__marker">{{ game.players.opponent.marker }}</span> <span>{{ game.players.opponent.name }}</span></div>
 			</div>
 			<div class="clearfix"></div>
 			<div class="game-card__board">
@@ -46,7 +46,7 @@
 				<div>
 					<div class="game-card__board__cell" v-on:click="makeMove(4)">{{ game.board[3] }}</div>
 					<div class="game-card__board__cell" v-on:click="makeMove(5)">{{ game.board[4] }}</div>
-					<div class="game-card__board__cell" v-on:click="makeMove(6)">{{ game.board[5] }}</div>
+					<div class="game-card__board__cell" v-on:cli	ck="makeMove(6)">{{ game.board[5] }}</div>
 				</div>
 				<div>
 					<div class="game-card__board__cell" v-on:click="makeMove(7)">{{ game.board[6] }}</div>
@@ -58,7 +58,7 @@
 		<div class="toast" v-cloak v-show="toast.show" v-on:click="hideToast">{{ toast.message }}</div>
 		<footer>
 			<small>
-				{{ counts.players }} players online, {{ counts.games }} games in progress<br/>
+				{{ stats.players }} players online, {{ stats.games }} games in progress<br/>
 				Created by <a href="http://www.slicvic.com">slicvic.com</a>
 			</small>
 		</footer>

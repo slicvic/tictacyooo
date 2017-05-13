@@ -21,7 +21,7 @@ class SocketManager {
     }
 
     /**
-     * Check when a player signs in to the app.
+     * Check when a player signs in to the game.
      * @param {Object} socket
      * @param {Function} callback
      */
@@ -77,9 +77,9 @@ class SocketManager {
      * @param {Object} socket
      * @param {Object} responseData
      */
-    emitMoveResponse(socket, {success = false, message = '', cell} = {}) {
+    emitMoveResponse(socket, {success = false, message = '', position} = {}) {
         socket.emit('player.moveResponse', {
-            cell,
+            position,
             success,
             message
         });
@@ -90,22 +90,22 @@ class SocketManager {
      * @param {Object} socket
      * @param {Object} responseData
      */
-    emitOpponentMove(socket, {cell = ''} = {}) {
+    emitOpponentMove(socket, {position = ''} = {}) {
         socket.emit('game.opponentMove', {
-            cell
+            position
         });
     }
 
     /**
-     * Emit counts to all clients.
+     * Emit stats to all connected sockets.
      * @param {Object} responseData
      */
-    emitCounts({players = 0, games = 0} = {}) {
+    emitStats({players = 0, games = 0} = {}) {
         let data = {
             players,
             games
         };
-        this.io.emit('counts', data);
+        this.io.emit('stats', data);
     }
 }
 

@@ -14,13 +14,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules/socket.io-client/dist')));
 
 socketManager.onConnect(function(socket) {
-    // Send counts
-    this.emitCounts({
+    this.emitStats({
         players: stateManager.countPlayers(),
         games: stateManager.countGames()
     });
-
-    // Player signed in to the app
+    
+    // Player signs in to the game
     this.onJoin(socket, (data) => {
         try {
             if (!(typeof data === 'object' && typeof data.name === 'string')) {
@@ -42,8 +41,7 @@ socketManager.onConnect(function(socket) {
 
     // Player is looking for opponent
     this.onFindOpponent(socket, (data) => {
-        if (
-            typeof data === 'object'
+        if (typeof data === 'object'
             && typeof data.playerId === 'string'
             && stateManager.doesPlayerExist(data.playerId)
         ) {
@@ -59,13 +57,12 @@ socketManager.onConnect(function(socket) {
         }
     });
 
-    // Player made a move
+    // Player makes a move
     this.onMove(socket, (data) => {
-        if (
-            typeof data === 'object'
+        if (typeof data === 'object'
             && typeof data.gameId === 'string'
             && typeof data.playerId === 'string'
-            && typeof data.cell === 'number'
+            && typeof data.position === 'number'
             && stateManager.doesPlayerExist(data.playerId)
             && stateManager.doesGameExist(data.gameId)
         ) {
@@ -73,14 +70,14 @@ socketManager.onConnect(function(socket) {
             const player = stateManager.players[data.playerId];
             const opponent = (player.id === game.playerX.id) ? game.playerO : game.playerX;
             try {
-                game.makeMove(player.id, data.cell);
+                game.makeMove(player.id, data.position);
                 this.emitMoveResponse(socket, {
-                    cell: data.cell,
+                    position: data.position,
                     success: true
                 });
                 // Notify opponent
                 this.emitOpponentMove(opponent.socket, {
-                    cell: data.cell
+                    position: data.position
                 });
             } catch (e) {
                 this.emitMoveResponse(socket, {
