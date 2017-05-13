@@ -31,7 +31,7 @@
 			</div>
 		</section>
 		<section class="game-card" v-show="isStatePlaying">
-			<h2 class="game-card__turn" v-show="game.isMyTurn">Your Turn</h2>
+			<h2 class="game-card__turn">{{ whosTurn }} turn!</h2>
 			<div class="game-card__scoreboard">
 				<div class="game-card__scoreboard__player game-card__scoreboard__player--x"><span class="game-card__scoreboard__marker">{{ game.players.me.marker }}</span> <span>Me</span></div>
 				<div class="game-card__scoreboard__player game-card__scoreboard__player--o"><span class="game-card__scoreboard__marker">{{ game.players.opponent.marker }}</span> <span>{{ game.players.opponent.name }}</span></div>

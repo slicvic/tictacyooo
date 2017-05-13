@@ -1,4 +1,4 @@
-var app = function (Vue) {
+const app = function (Vue) {
     const SERVER_URL = 'http://192.167.10.10:3001';
     const STATE_JOIN = 'join';
     const STATE_AWAITING_OPPONENT = 'awaitingOpponent';
@@ -45,11 +45,9 @@ var app = function (Vue) {
         created() {
             this.socket = io(SERVER_URL);
 
-            this.socket.on('connect', () => {
-                this.socket.on('stats', (data) => {
-                    this.stats.players = data.players;
-                    this.stats.games = data.games;
-                });
+            this.socket.on('stats', (data) => {
+                this.stats.players = data.players;
+                this.stats.games = data.games;
             });
 
             this.socket.on('player.joinResponse', (response) => {
@@ -80,6 +78,11 @@ var app = function (Vue) {
                 }
             });
 
+            this.socket.on('game.opponentMove', (data) => {
+                this.game.isMyTurn = true;
+                this.game.board[data.position - 1] = this.game.players.opponent.marker;
+            });
+
             this.socket.on('game.start', (data) => {
                 this.game.id = data.gameId;
                 this.game.isMyTurn = data.isMyTurn;
@@ -89,11 +92,6 @@ var app = function (Vue) {
                 this.game.players.opponent.marker = data.players.opponent.marker;
                 this.game.board = ['', '', '', '', '', '', '', '', ''];
                 this.state = STATE_PLAYING;
-            });
-
-            this.socket.on('game.opponentMove', (response) => {
-                this.game.isMyTurn = true;
-                this.game.board[response.position - 1] = this.game.players.opponent.marker;
             });
         },
         methods: {
@@ -128,6 +126,9 @@ var app = function (Vue) {
             },
             isStatePlaying() {
                 return this.state === STATE_PLAYING;
+            },
+            whosTurn() {
+                return (this.game.isMyTurn) ? 'Your' : `${this.game.players.opponent.name}'s`;
             }
         }
     });

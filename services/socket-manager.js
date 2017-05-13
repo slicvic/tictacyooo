@@ -101,7 +101,7 @@ class SocketManager {
      * @param {Object} responseData
      */
     emitStats({players = 0, games = 0} = {}) {
-        let data = {
+        const data = {
             players,
             games
         };
