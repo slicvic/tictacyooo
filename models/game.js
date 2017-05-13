@@ -21,7 +21,7 @@ class Game {
         }
 
         this._id = String(Date.now());
-        this._turn = (mathHelper.random() % 2 === 0) ? Game.Chip.X : Game.Chip.O;
+        this._turn = (mathHelper.random() % 2 === 0) ? Game.Marker.X : Game.Marker.O;
         this._board = ['', '', '', '', '', '', '', '', ''];
         this._playerX = playerX;
         this._playerO = playerO;
@@ -86,11 +86,11 @@ class Game {
      * @return {boolean}
      */
     isPlayerTurn(player) {
-        if (player.id === this._playerX.id && this._turn === Game.Chip.X) {
+        if (player.id === this._playerX.id && this._turn === Game.Marker.X) {
             return true;
         }
 
-        if (player.id === this._playerO.id && this._turn === Game.Chip.O) {
+        if (player.id === this._playerO.id && this._turn === Game.Marker.O) {
             return true;
         }
 
@@ -124,31 +124,31 @@ class Game {
         cell = Number(cell);
 
         if (!(cell >= 1 && cell <= 9)) {
-            throw Error("That's not a valid cell");
+            throw Error('Bad move, invalid square!');
         }
 
         let player = this.getPlayerById(playerId);
 
         if (!player) {
-            throw Error("You're not in the game");
+            throw Error("Chill out, you're not in this game!");
         }
 
         if (!this.isPlayerTurn(player)) {
-            throw Error("It's not your turn");
+            throw Error("Chill out, it's not your turn yet!");
         }
 
         let cellIndex = cell - 1;
 
         if (this._board[cellIndex] !== '') {
-            throw Error('That move was already made');
+            throw Error('Too late, square already marked!');
         }
 
         if (player.id === this._playerX.id) {
-            this._board[cellIndex] = Game.Chip.X;
-            this._turn = Game.Chip.O;
+            this._board[cellIndex] = Game.Marker.X;
+            this._turn = Game.Marker.O;
         } else {
-            this._board[cellIndex] = Game.Chip.O;
-            this._turn = Game.Chip.X;
+            this._board[cellIndex] = Game.Marker.O;
+            this._turn = Game.Marker.X;
         }
     }
 }
@@ -158,7 +158,7 @@ Game.Status = {
     OVER: 'OVER'
 };
 
-Game.Chip = {
+Game.Marker = {
     X: 'X',
     O: 'O'
 };

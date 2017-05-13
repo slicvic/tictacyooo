@@ -33,8 +33,8 @@
 		<section class="game-card" v-show="isStatePlaying">
 			<h2 class="game-card__turn" v-show="game.isMyTurn">Your Turn</h2>
 			<div class="game-card__scoreboard">
-				<div class="game-card__scoreboard__player game-card__scoreboard__player--x"><span class="game-card__scoreboard__chip">{{ game.players.me.chip }}</span> <span>Me</span></div>
-				<div class="game-card__scoreboard__player game-card__scoreboard__player--o"><span class="game-card__scoreboard__chip">{{ game.players.opponent.chip }}</span> <span>{{ game.players.opponent.name }}</span></div>
+				<div class="game-card__scoreboard__player game-card__scoreboard__player--x"><span class="game-card__scoreboard__mark">{{ game.players.me.mark }}</span> <span>Me</span></div>
+				<div class="game-card__scoreboard__player game-card__scoreboard__player--o"><span class="game-card__scoreboard__mark">{{ game.players.opponent.mark }}</span> <span>{{ game.players.opponent.name }}</span></div>
 			</div>
 			<div class="clearfix"></div>
 			<div class="game-card__board">

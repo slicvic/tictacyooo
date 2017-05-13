@@ -32,12 +32,12 @@ var app = function (Vue) {
                 board: ['', '', '', '', '', '', '', '', ''],
                 players: {
                     me: {
-                        chip: '',
+                        marker: '',
                     },
                     opponent: {
                         id: '',
                         name: '',
-                        chip: ''
+                        marker: ''
                     }
                 }
             }
@@ -74,7 +74,7 @@ var app = function (Vue) {
             this.socket.on('player.moveResponse', (response) => {
                 if (response.success) {
                     this.game.isMyTurn = false;
-                    this.game.board[response.cell - 1] = this.game.players.me.chip;
+                    this.game.board[response.cell - 1] = this.game.players.me.marker;
                 } else {
                     this.showToast(response.message);
                 }
@@ -83,17 +83,17 @@ var app = function (Vue) {
             this.socket.on('game.start', (data) => {
                 this.game.id = data.gameId;
                 this.game.isMyTurn = data.isMyTurn;
-                this.game.players.me.chip = data.players.me.chip;
+                this.game.players.me.marker = data.players.me.marker;
                 this.game.players.opponent.id = data.players.opponent.id;
                 this.game.players.opponent.name = data.players.opponent.name;
-                this.game.players.opponent.chip = data.players.opponent.chip;
+                this.game.players.opponent.marker = data.players.opponent.marker;
                 this.game.board = ['', '', '', '', '', '', '', '', ''];
                 this.state = STATE_PLAYING;
             });
 
             this.socket.on('game.opponentMove', (response) => {
                 this.game.isMyTurn = true;
-                this.game.board[response.cell - 1] = this.game.players.opponent.chip;
+                this.game.board[response.cell - 1] = this.game.players.opponent.marker;
             });
         },
         methods: {
@@ -118,20 +118,16 @@ var app = function (Vue) {
                 this.toast.show = false;
             },
             validateName(name) {
-                if (!(typeof name === 'string' && name.length >= 4)) {
-                    throw new Error('Name must be at least 5 characters long, yo!');
+                if (!(typeof name === 'string' && name.length >= 3)) {
+                    throw new Error('Name must be at least 3 characters long, yo!');
                 }
             },
             makeMove(cell) {
-                if (this.game.isMyTurn) {
-                    this.socket.emit('player.move', {
-                        gameId: this.game.id,
-                        playerId: this.user.id,
-                        cell: cell
-                    });
-                } else {
-                    this.showToast("It's not your turn!");
-                }
+                this.socket.emit('player.move', {
+                    gameId: this.game.id,
+                    playerId: this.user.id,
+                    cell: cell
+                });
             }
         },
         computed: {

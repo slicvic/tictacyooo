@@ -35,7 +35,7 @@ class Player {
             throw Error('Invalid argument socket');
         }
 
-        this._id = Buffer.from(socket.request.connection.remoteAddress + socket.request.headers['user-agent']).toString('base64');
+        this._id = Buffer.from(socket.request.connection.remoteAddress + socket.request.headers['user-agent'] + Date.now()).toString('base64');
         this._name = name;
         this._socket = socket;
         this.status = status;

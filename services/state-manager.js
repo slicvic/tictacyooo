@@ -68,13 +68,13 @@ class StateManager {
 
     		playerX.socket.emit('game.start', {
     			gameId: game.id,
-    			isMyTurn: (game.turn === Game.Chip.X),
+    			isMyTurn: (game.turn === Game.Marker.X),
                 players: {
                     me: {
-                        chip: Game.Chip.X
+                        marker: Game.Marker.X
                     },
                     opponent: {
-                        chip: Game.Chip.O,
+                        marker: Game.Marker.O,
                         id: game.playerO.id,
                         name: game.playerO.name
                     }
@@ -83,13 +83,13 @@ class StateManager {
 
     		playerO.socket.emit('game.start', {
     			gameId: game.id,
-                isMyTurn: (game.turn === Game.Chip.O),
+                isMyTurn: (game.turn === Game.Marker.O),
     			players: {
                     me: {
-        				chip: Game.Chip.O
+        				marker: Game.Marker.O
         			},
         			opponent: {
-        				chip: Game.Chip.X,
+        				marker: Game.Marker.X,
         				id: playerX.id,
         				name: playerX.name
         			}
