@@ -57,14 +57,14 @@ class StateManager {
     	}
 
     	for (let playerId in this.players) {
-    		if (playerId === playerX.id || this.players[playerId].status !== Player.Status.AWAITING_OPPONENT) {
+    		if (playerId === playerX.id || this.players[playerId].status !== Player.Status.AwaitingOpponent) {
     			continue;
     		}
 
     		const playerO = this.players[playerId];
     		const game = new Game(playerX, playerO);
-    		playerX.status = Player.Status.PLAYING;
-    		playerO.status = Player.Status.PLAYING;
+    		playerX.status = Player.Status.Playing;
+    		playerO.status = Player.Status.Playing;
 
     		playerX.socket.emit('game.start', {
     			gameId: game.id,

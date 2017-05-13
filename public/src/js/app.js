@@ -100,12 +100,6 @@ var app = function (Vue) {
             onJoin() {
                 this.hideToast();
 
-                try {
-                    this.validateName(this.user.name);
-                } catch(e) {
-                    return this.showToast(e.message);
-                }
-
                 this.socket.emit('player.join', {
                     name: this.user.name
                 });
@@ -116,11 +110,6 @@ var app = function (Vue) {
             },
             hideToast() {
                 this.toast.show = false;
-            },
-            validateName(name) {
-                if (!(typeof name === 'string' && name.length >= 3)) {
-                    throw new Error('Name must be at least 3 characters long, yo!');
-                }
             },
             makeMove(cell) {
                 this.socket.emit('player.move', {

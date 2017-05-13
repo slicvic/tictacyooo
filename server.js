@@ -48,7 +48,7 @@ socketManager.onConnect(function(socket) {
             && stateManager.doesPlayerExist(data.playerId)
         ) {
             const player = stateManager.players[data.playerId];
-            player.status = Player.Status.AWAITING_OPPONENT;
+            player.status = Player.Status.AwaitingOpponent;
             this.emitFindOpponentResponse(socket, {success: true});
             stateManager.findOpponent(player);
         } else {
