@@ -1,5 +1,6 @@
-const Player = require('../models/player');
-const Game   = require('../models/game');
+const Player     = require('../models/player');
+const Game       = require('../models/game');
+const mathHelper = require('../helpers/math');
 
 /**
  * Maintains state of games and players.
@@ -78,8 +79,10 @@ class StateManager {
     		}
 
     		const playerO = this._players[playerId];
-    		const game = new Game(playerX, playerO);
-    		playerX.status = Player.Status.Playing;
+            const firstTurn = (mathHelper.random() % 2 === 0) ? Game.Marker.X : Game.Marker.O;
+    		const game = new Game({playerX: playerX, playerO: playerO, firstTurn: firstTurn});
+
+            playerX.status = Player.Status.Playing;
     		playerO.status = Player.Status.Playing;
 
     		playerX.socket.emit('game.start', {

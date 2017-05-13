@@ -1,5 +1,4 @@
 const Player     = require('./player');
-const mathHelper = require('../helpers/math');
 
 /**
  * A game object.
@@ -7,11 +6,14 @@ const mathHelper = require('../helpers/math');
 class Game {
     /**
      * Create a new game.
+     * @param  {string|number} id
+     * @param  {Game.Marker} firstTurn
+     * @param  {Game.Status} status
      * @param  {Player} playerX
      * @param  {Player} playerO
      * @throws {Error}
      */
-    constructor(playerX, playerO) {
+    constructor({playerX, playerO, firstTurn, id = String(Date.now()), status = Game.Status.InProgress}) {
         if (!(playerX instanceof Player)) {
             throw Error('Invalid argument playerX');
         }
@@ -20,12 +22,16 @@ class Game {
             throw Error('Invalid argument playerO');
         }
 
-        this._id = String(Date.now());
-        this._turn = (mathHelper.random() % 2 === 0) ? Game.Marker.X : Game.Marker.O;
-        this._board = ['', '', '', '', '', '', '', '', ''];
+        if (!(firstTurn === Game.Marker.X || firstTurn === Game.Marker.O)) {
+            throw Error('Invalid argument firstTurn');
+        }
+
+        this._id = id;
+        this._turn = firstTurn;
         this._playerX = playerX;
         this._playerO = playerO;
-        this.status = Game.Status.InProgress;
+        this._board = ['', '', '', '', '', '', '', '', ''];
+        this.status = status;
     }
 
     /**
@@ -137,17 +143,17 @@ class Game {
             throw Error("Chill out yo, it's not your turn yet!");
         }
 
-        const boardIndex = (position - 1);
+        const index = (position - 1);
 
-        if (this._board[boardIndex] !== Game.Marker.Empty) {
+        if (this._board[index] !== Game.Marker.Empty) {
             throw Error('Too late yo, square already marked!');
         }
 
         if (player.id === this._playerX.id) {
-            this._board[boardIndex] = Game.Marker.X;
+            this._board[index] = Game.Marker.X;
             this._turn = Game.Marker.O;
         } else {
-            this._board[boardIndex] = Game.Marker.O;
+            this._board[index] = Game.Marker.O;
             this._turn = Game.Marker.X;
         }
     }

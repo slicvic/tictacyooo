@@ -36,13 +36,13 @@ socketManager.onConnect(function(socket, socketId) {
         }
     });
 
-    // Player entered game
+    // Player joined game
     this.onJoin(socket, (data) => {
         try {
             if (!(typeof data === 'object' && typeof data.name === 'string')) {
                 throw Error('Invalid request data');
             }
-            const player = Player.create(socketId, data.name, socket);
+            const player = new Player({id: socketId, name: data.name, socket: socket});
             stateManager.players[player.id] = player;
             this.emitJoinResponse(socket, {
                 success: true,

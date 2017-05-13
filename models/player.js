@@ -4,24 +4,13 @@
 class Player {
     /**
      * Create a new player.
-     * @param  {string} id
+     * @param  {string|number} id
      * @param  {string} name
-     * @param  {Object} socket
-     * @return {Player}
-     */
-    static create(id, name, socket) {
-        return new Player(id, name, Player.Status.Idle, socket);
-    }
-
-    /**
-     * Create a new player.
-     * @param  {string} id
-     * @param  {string} name
-     * @param  {string} status
+     * @param  {Player.Status} status
      * @param  {Object} socket
      * @throws {Error}
      */
-    constructor(id, name, status, socket) {
+    constructor({id, name, socket, status = Player.Status.Idle}) {
         if (!(typeof name === 'string' && name.length >= Player.NAME_LENGTH_MIN && name.length <= Player.NAME_LENGTH_MAX)) {
             throw Error(`Yo name must be between ${Player.NAME_LENGTH_MIN} and ${Player.NAME_LENGTH_MAX} characters!`);
         }
@@ -82,14 +71,14 @@ class Player {
     }
 }
 
-Player.NAME_LENGTH_MIN = 3;
-Player.NAME_LENGTH_MAX = 10;
-
 Player.Status = {
     Idle: 'Idle',
     AwaitingOpponent: 'AwaitingOpponent',
     Playing: 'Playing',
     Away: 'Away'
 };
+
+Player.NAME_LENGTH_MIN = 3;
+Player.NAME_LENGTH_MAX = 10;
 
 module.exports = Player;
