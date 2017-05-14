@@ -22,13 +22,15 @@ socketManager.onConnect(function(socket, socketId) {
 
     // Player disconnected
     this.onDisconnect(socket, () => {
+        // Change player status "away"
         if (stateManager.players[socketId] instanceof Player) {
             stateManager.players[socketId].status = Player.Status.Away;
         }
 
+        // Notify opponent if in game and change game status to "over"
         for (let gameId in stateManager.games) {
             const game = stateManager.games[gameId];
-            if (game.findPlayerById(socketId)) {
+            if (game.status === Game.Status.InProgress && game.findPlayerById(socketId)) {
                 const opponent = (socketId === game.playerO.id) ? game.playerX : game.playerO;
                 game.status = Game.Status.Over;
                 this.emitOpponentLeft(opponent.socket);
