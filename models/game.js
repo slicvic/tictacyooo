@@ -1,12 +1,12 @@
 const Player     = require('./player');
 
 /**
- * A game object.
+ * A game class.
  */
 class Game {
     /**
      * Create a new game.
-     * @param  {string|number} id
+     * @param  {string} id
      * @param  {Game.Marker} firstTurn
      * @param  {Game.Status} status
      * @param  {Player} playerX
@@ -14,6 +14,10 @@ class Game {
      * @throws {Error}
      */
     constructor({playerX, playerO, firstTurn, id = String(Date.now()), status = Game.Status.InProgress}) {
+        if (!(typeof id === 'string')) {
+            throw Error('Invalid argument id');
+        }
+
         if (!(playerX instanceof Player)) {
             throw Error('Invalid argument playerX');
         }
@@ -30,8 +34,11 @@ class Game {
         this._turn = firstTurn;
         this._playerX = playerX;
         this._playerO = playerO;
-        this._board = ['', '', '', '', '', '', '', '', ''];
         this.status = status;
+        this._board = [];
+        for (let i = 1; i < 10; i++) {
+            this._board.push(Game.Marker.Empty);
+        }
     }
 
     /**
@@ -44,7 +51,7 @@ class Game {
 
     /**
      * Get status.
-     * @return {string}
+     * @return {Game.Status}
      */
     get status() {
         return this._status;
@@ -52,13 +59,14 @@ class Game {
 
     /**
      * Set status.
-     * @param  {string} status
+     * @param  {Game.Status} status
      * @throws {Error}
      */
     set status(status) {
         if (!Game.Status[status]) {
             throw Error('Invalid argument status');
         }
+
         this._status = status;
     }
 
@@ -80,7 +88,7 @@ class Game {
 
     /**
      * Get turn.
-     * @return {string}
+     * @return {Game.Marker}
      */
     get turn() {
         return this._turn;
@@ -90,8 +98,13 @@ class Game {
      * Check if it's a given player's turn or not.
      * @param  {Player} player
      * @return {boolean}
+     * @throws {Error}
      */
     isPlayerTurn(player) {
+        if (!(player instanceof Player)) {
+            throw Error('Invalid argument player');
+        }
+
         if (player.id === this._playerX.id && this._turn === Game.Marker.X) {
             return true;
         }

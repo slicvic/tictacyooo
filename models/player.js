@@ -4,18 +4,26 @@
 class Player {
     /**
      * Create a new player.
-     * @param  {string|number} id
+     * @param  {string} id
      * @param  {string} name
      * @param  {Player.Status} status
      * @param  {Object} socket
      * @throws {Error}
      */
     constructor({id, name, socket, status = Player.Status.Idle}) {
+        if (!(typeof id === 'string')) {
+            throw Error('Invalid argument id');
+        }
+
         if (!(typeof name === 'string' && name.length >= Player.NAME_LENGTH_MIN && name.length <= Player.NAME_LENGTH_MAX)) {
             throw Error(`Yo name must be between ${Player.NAME_LENGTH_MIN} and ${Player.NAME_LENGTH_MAX} characters!`);
         }
 
-        if (!(typeof socket === 'object')) {
+        if (!(
+            typeof socket === 'object'
+            && typeof socket.on === 'function'
+            && typeof socket.emit === 'function'
+        )) {
             throw Error('Invalid argument socket');
         }
 
@@ -43,7 +51,7 @@ class Player {
 
     /**
      * Get status.
-     * @return {string}
+     * @return {Player.Status}
      */
     get status() {
         return this._status;
@@ -51,7 +59,7 @@ class Player {
 
     /**
      * Set status.
-     * @param  {string} status
+     * @param  {Player.Status} status
      * @throws {Error}
      */
     set status(status) {
