@@ -65,7 +65,22 @@ h1 {
 	padding: 40px 0;
 }
 
-.game-card__board__cell {
+.game-card__turn {
+	color: #f6b680;
+}
+
+.scoreboard {
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
+.player__marker {
+	font-size: 20px;
+	color: #ed2939;
+	font-weight: bold;
+}
+
+.board__cell {
 	display: inline-block;
 	border: 0;
 	margin-bottom: 4px;
@@ -77,28 +92,6 @@ h1 {
 	line-height: 90px;
 	width: 90px;
 	height: 90px;
-	font-weight: bold;
-}
-
-.game-card__turn {
-	color: #f6b680;
-}
-
-.game-card__scoreboard__player--x {
-	float: left;
-}
-
-.game-card__scoreboard__player--o {
-	float: right;
-}
-
-.game-card__scoreboard__player {
-	margin-right: 50px;
-}
-
-.game-card__scoreboard__marker {
-	font-size: 20px;
-	color: #ed2939;
 	font-weight: bold;
 }
 
