@@ -22,7 +22,7 @@ socketManager.onConnect(function(socket, socketId) {
 
     // Player disconnected
     this.onDisconnect(socket, () => {
-        // Change player status "away"
+        // Change player status to "away"
         if (stateManager.players[socketId] instanceof Player) {
             stateManager.players[socketId].status = Player.Status.Away;
         }

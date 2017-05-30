@@ -116,7 +116,9 @@ class SocketManager {
      * @param {Object} socket
      */
     emitOpponentLeft(socket) {
-        socket.emit('game.opponentLeft', {});
+        socket.emit('game.opponentLeft', {
+            message: 'Your opponent has left the game!'
+        });
     }
 
     /**

@@ -107,3 +107,26 @@ h1 {
     font-size: 20px;
     border-radius: 6px;
 }
+
+.alert {
+   	position: absolute;
+    top: 30%;
+    left: 50%;
+    margin-left: -150px;
+    width: 300px;
+    background: #F1C40F;
+    padding: 8px;
+    color: #000;
+    font-size: 20px;
+    border-radius: 6px;
+}
+
+.alert__button {
+	font-size: 20px;
+
+	padding: 10px 20px;
+	border-radius: 6px;
+	border: 0;
+	background: #fb7453;
+	color: #fff;
+}

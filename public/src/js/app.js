@@ -3,8 +3,7 @@ const app = function (Vue) {
     const STATE_JOIN = 'join';
     const STATE_AWAITING_OPPONENT = 'awaitingOpponent';
     const STATE_PLAYING = 'playing';
-
-    return new Vue({
+    const vm = new Vue({
         el: '#app',
         data: {
             socket: null,
@@ -18,7 +17,20 @@ const app = function (Vue) {
 
             toast: {
                 message: '',
-                show: false
+                isVisible: false
+            },
+
+            alert: {
+                message: '',
+                isVisible: false,
+                okButton: {
+                    text: 'OK',
+                    onClick: null
+                },
+                cancelButton: {
+                    text: 'Cancel',
+                    isVisible: false
+                }
             },
 
             stats: {
@@ -32,12 +44,12 @@ const app = function (Vue) {
                 board: ['', '', '', '', '', '', '', '', ''],
                 players: {
                     me: {
-                        marker: '',
+                        marker: 'o',
                     },
                     opponent: {
                         id: '',
-                        name: '',
-                        marker: ''
+                        name: 'opponent',
+                        marker: 'x'
                     }
                 }
             }
@@ -94,8 +106,19 @@ const app = function (Vue) {
                 this.state = STATE_PLAYING;
             });
 
-            this.socket.on('game.opponentLeft', () => {
-                this.showToast('Your opponent has left the game!');
+            this.socket.on('game.opponentLeft', (data) => {
+                this.showAlert({
+                    message: data.message,
+                    okButton: {
+                        text: 'OK',
+                        onClick: () => {
+                            this.state = STATE_AWAITING_OPPONENT;
+                            this.socket.emit('player.findOpponent', {
+                                playerId: this.user.id
+                            });
+                        }
+                    }
+                });
             });
         },
         methods: {
@@ -106,19 +129,40 @@ const app = function (Vue) {
                     name: this.user.name
                 });
             },
-            showToast(message) {
-                this.toast.message = message;
-                this.toast.show = true;
-            },
-            hideToast() {
-                this.toast.show = false;
-            },
             makeMove(position) {
                 this.socket.emit('player.move', {
                     gameId: this.game.id,
                     playerId: this.user.id,
                     position: position
                 });
+            },
+            showToast(message) {
+                this.toast.message = message;
+                this.toast.isVisible = true;
+            },
+            hideToast() {
+                this.toast.isVisible = false;
+            },
+            showAlert({message, okButton = {text: 'OK', onClick: null}, cancelButton = {text: 'Cancel', isVisible: false}} = {}) {
+                this.alert.message = message;
+                this.alert.okButton.text = okButton.text;
+                this.alert.okButton.onClick = () => {
+                    if (typeof okButton.onClick === 'function') {
+                        okButton.onClick()
+                    }
+                    this.hideAlert();
+                }
+
+                if (cancelButton.isVisible) {
+                    this.alert.cancelButton.text = cancelButton.text;
+                    this.alert.cancelButton.isVisible = true;
+                }
+
+                this.alert.isVisible = true;
+            },
+            hideAlert() {
+                this.alert.isVisible = false;
+                this.alert.okButton.onClick = null;
             }
         },
         computed: {
@@ -136,4 +180,8 @@ const app = function (Vue) {
             }
         }
     });
+
+    return {
+        vm: vm
+    }
 }(Vue);

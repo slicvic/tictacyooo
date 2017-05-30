@@ -56,6 +56,11 @@
 			</div>
 		</section>
 		<div class="toast" v-cloak v-show="toast.isVisible" v-on:click="hideToast">{{ toast.message }}</div>
+		<div class="alert" v-cloak v-show="alert.isVisible">
+			<div class="alert__message">{{ alert.message }}</div>
+			<button class="alert__button alert__button--ok" v-on:click="alert.okButton.onClick" v-text="alert.okButton.text"></button>
+			<button class="alert__button alert__button--cancel" v-show="alert.cancelButton.isVisible" v-on:click="hideAlert()" v-text="alert.cancelButton.text"></button>
+		</div>
 		<footer>
 			<small>
 				{{ stats.players }} players online, {{ stats.games }} games in progress<br/>
