@@ -44,12 +44,12 @@ const app = function (Vue) {
                 board: ['', '', '', '', '', '', '', '', ''],
                 players: {
                     me: {
-                        marker: 'o',
+                        marker: 'O',
                     },
                     opponent: {
                         id: '',
                         name: 'opponent',
-                        marker: 'x'
+                        marker: 'X'
                     }
                 }
             }
@@ -62,37 +62,47 @@ const app = function (Vue) {
                 this.stats.games = data.games;
             });
 
-            this.socket.on('player.joinResponse', (response) => {
-                if (response.success) {
-                    this.user.id = response.playerId;
+            this.socket.on('player.joinResponse', (data) => {
+                if (data.success) {
+                    this.user.id = data.playerId;
                     this.state = STATE_AWAITING_OPPONENT;
                     this.socket.emit('player.findOpponent', {
                         playerId: this.user.id
                     });
                 } else {
-                    this.showToast(response.message);
+                    this.showToast(data.message);
                 }
             });
 
-            this.socket.on('player.findOpponentResponse', (response) => {
-                if (!response.success) {
+            this.socket.on('player.findOpponentResponse', (data) => {
+                if (!data.success) {
                     this.state = STATE_JOIN;
-                    this.showToast(response.message);
+                    this.showToast(data.message);
                 }
             });
 
-            this.socket.on('player.moveResponse', (response) => {
-                if (response.success) {
+            this.socket.on('player.moveResponse', (data) => {
+                if (data.success) {
                     this.game.isMyTurn = false;
-                    this.game.board[response.position - 1] = this.game.players.me.marker;
+                    this.game.board[data.position - 1] = this.game.players.me.marker;
+                    if (data.status === this.game.players.me.marker) {
+                        this.showAlert({
+                            message: 'You won!'
+                        });
+                    }
                 } else {
-                    this.showToast(response.message);
+                    this.showToast(data.message);
                 }
             });
 
             this.socket.on('game.opponentMove', (data) => {
                 this.game.isMyTurn = true;
                 this.game.board[data.position - 1] = this.game.players.opponent.marker;
+                if (data.status === this.game.players.opponent.marker) {
+                    this.showAlert({
+                        message: this.game.players.opponent.name + ' won!'
+                    });
+                }
             });
 
             this.socket.on('game.start', (data) => {

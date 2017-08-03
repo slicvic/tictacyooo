@@ -27,12 +27,18 @@ socketManager.onConnect(function(socket, socketId) {
             stateManager.players[socketId].status = Player.Status.Away;
         }
 
-        // Notify opponent if in game and change game status to "over"
+        // Notify opponent and update game status, if in game
         for (let gameId in stateManager.games) {
             const game = stateManager.games[gameId];
             if (game.status === Game.Status.InProgress && game.findPlayerById(socketId)) {
-                const opponent = (socketId === game.playerO.id) ? game.playerX : game.playerO;
-                game.status = Game.Status.Over;
+                let opponent;
+                if (socketId === game.playerO.id) {
+                    opponent = game.playerX;
+                    game.status = Game.Status.Win.X;
+                } else {
+                    opponent = game.playerO;
+                    game.status = Game.Status.Win.O;
+                }
                 this.emitOpponentLeft(opponent.socket);
             }
         }
@@ -87,21 +93,26 @@ socketManager.onConnect(function(socket, socketId) {
         ) {
             const game = stateManager.games[data.gameId];
             const player = stateManager.players[data.playerId];
-            const opponent = (player.id === game.playerX.id) ? game.playerO : game.playerX;
+
             try {
                 game.makeMove(player.id, data.position);
+
                 this.emitMoveResponse(socket, {
                     position: data.position,
+                    status: game.status,
                     success: true
                 });
+
                 // Notify opponent
+                const opponent = (player.id === game.playerX.id) ? game.playerO : game.playerX;
                 this.emitOpponentMove(opponent.socket, {
-                    position: data.position
+                    position: data.position,
+                    status: game.status
                 });
             } catch (e) {
                 this.emitMoveResponse(socket, {
                     success: false,
-                    message: e.message
+                    message: e.message,
                 });
             }
         } else {

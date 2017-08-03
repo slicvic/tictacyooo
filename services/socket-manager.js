@@ -92,11 +92,12 @@ class SocketManager {
      * @param {Object} socket
      * @param {Object} responseData
      */
-    emitMoveResponse(socket, {success = false, message = '', position} = {}) {
+    emitMoveResponse(socket, {success = false, message = '', position, status = null} = {}) {
         socket.emit('player.moveResponse', {
             position,
             success,
-            message
+            message,
+            status
         });
     }
 
@@ -105,9 +106,10 @@ class SocketManager {
      * @param {Object} socket
      * @param {Object} data
      */
-    emitOpponentMove(socket, {position = ''} = {}) {
+    emitOpponentMove(socket, {position = '', status = null} = {}) {
         socket.emit('game.opponentMove', {
-            position
+            position,
+            status
         });
     }
 
@@ -117,7 +119,7 @@ class SocketManager {
      */
     emitOpponentLeft(socket) {
         socket.emit('game.opponentLeft', {
-            message: 'Your opponent has left the game!'
+            message: 'Your opponent left the game!'
         });
     }
 

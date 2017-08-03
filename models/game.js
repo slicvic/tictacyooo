@@ -1,4 +1,4 @@
-const Player     = require('./player');
+const Player = require('./player');
 
 /**
  * A game class.
@@ -63,7 +63,7 @@ class Game {
      * @throws {Error}
      */
     set status(status) {
-        if (!Game.Status[status]) {
+        if (!(Game.Status[status] || Game.Status.Win[status])) {
             throw Error('Invalid argument status');
         }
 
@@ -95,6 +95,14 @@ class Game {
     }
 
     /**
+     * Check if game is over.
+     * @return {boolean}
+     */
+    isOver() {
+        return (this._status !== Game.Status.InProgress);
+    }
+
+    /**
      * Check if it's a given player's turn or not.
      * @param  {Player} player
      * @return {boolean}
@@ -119,7 +127,7 @@ class Game {
     /**
      * Get player by id.
      * @param  {string} playerId
-     * @return {Player|false}
+     * @return {Player|null}
      */
     findPlayerById(playerId) {
         if (playerId === this._playerX.id) {
@@ -130,36 +138,41 @@ class Game {
             return this._playerO;
         }
 
-        return false;
+        return null;
     }
 
     /**
      * Make a move.
      * @param  {string} playerId
      * @param  {number} position
+     * @return {string}
      * @throws {Error}
      */
     makeMove(playerId, position) {
+        if (this.isOver()) {
+            throw Error('Too late yo! Game over!');
+        }
+
         position = Number(position);
 
         if (!(position >= 1 && position <= 9)) {
-            throw Error('Bad move yo, square out of bounds!');
+            throw Error('Bad move yo! Out of bounds!');
         }
 
         const player = this.findPlayerById(playerId);
 
         if (!player) {
-            throw Error("Chill out yo, you're not in this game!");
+            throw Error("Chill out yo! Ain'tcha game!");
         }
 
         if (!this.isPlayerTurn(player)) {
-            throw Error("Chill out yo, it's not your turn yet!");
+            throw Error("Chill out yo! Ain'tcha turn!");
         }
 
         const index = (position - 1);
 
         if (this._board[index] !== Game.Marker.Empty) {
-            throw Error('Too late yo, square already marked!');
+            throw Error('Too late yo! Play already made!');
         }
 
         if (player.id === this._playerX.id) {
@@ -169,18 +182,96 @@ class Game {
             this._board[index] = Game.Marker.O;
             this._turn = Game.Marker.X;
         }
+
+        this._checkStatus();
+    }
+
+    _checkStatus() {
+        // First row
+        if (this._board[0] != ''
+            && this._board[0] == this._board[1]
+            && this._board[1] == this._board[2]
+        ) {
+            this._status = Game.Status.Win[this._board[0]];
+        }
+        // Second row
+        else if (this._board[3] != ''
+            && this._board[3] == this._board[4]
+            && this._board[4] == this._board[5]
+        ) {
+            this._status = Game.Status.Win[this._board[3]];
+        }
+        // Third row
+        else if (this._board[6] != ''
+            && this._board[6] == this._board[7]
+            && this._board[7] == this._board[8]
+        ) {
+            this._status = Game.Status.Win[this._board[6]];
+        }
+        // First column
+        else if (this._board[0] != ''
+            && this._board[0] == this._board[3]
+            && this._board[3] == this._board[6]
+        ) {
+            this._status = Game.Status.Win[this._board[0]];
+        }
+        // Second column
+        else if (this._board[1] != ''
+            && this._board[1] == this._board[4]
+            && this._board[4] == this._board[7]
+        ) {
+            this._status = Game.Status.Win[this._board[1]];
+        }
+        // Third column
+        else if (this._board[2] != ''
+            && this._board[2] == this._board[5]
+            && this._board[5] == this._board[8]
+        ) {
+            this._status = Game.Status.Win[this._board[2]];
+        }
+        // Across right
+        else if (this._board[0] != ''
+            && this._board[0] == this._board[4]
+            && this._board[4] == this._board[8]
+        ) {
+            this._status = Game.Status.Win[this._board[0]];
+        }
+        // Across left
+        else if (this._board[2] != ''
+            && this._board[2] == this._board[4]
+            && this._board[4] == this._board[6]
+        ) {
+            this._status = Game.Status.Win[this._board[2]];
+        }
+        // Squares are filled, we have a draw
+        else if (this._board[0] != ''
+            && this._board[1] != ''
+            && this._board[2] != ''
+            && this._board[3] != ''
+            && this._board[4] != ''
+            && this._board[5] != ''
+            && this._board[6] != ''
+            && this._board[7] != ''
+            && this._board[8] != ''
+        ) {
+            this._status = Game.Status.Draw;
+        }
     }
 }
-
-Game.Status = {
-    InProgress: 'InProgress',
-    Over: 'Over'
-};
 
 Game.Marker = {
     X: 'X',
     O: 'O',
     Empty: ''
+};
+
+Game.Status = {
+    InProgress: 'InProgress',
+    Draw: 'Draw',
+    Win: {
+        X: Game.Marker.X,
+        O: Game.Marker.O
+    }
 };
 
 module.exports = Game;
