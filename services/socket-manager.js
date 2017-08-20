@@ -6,8 +6,8 @@ class SocketManager {
      * Generate a unique socket id.
      * @param {Object} socket
      */
-    static generateSocketId(socket) {
-        return Buffer.from(socket.request.connection.remoteAddress + socket.request.headers['user-agent']).toString('base64');
+    static generateSocketId(socket, playerName) {
+        return Buffer.from(socket.request.connection.remoteAddress + JSON.stringify(socket.request.headers)).toString('base64');
     }
 
     /**
@@ -128,7 +128,7 @@ class SocketManager {
      */
     emitOpponentLeft(socket) {
         socket.emit('game.opponentLeft', {
-            message: 'Your opponent left the game! You win!'
+            message: 'Yo opponent left! You win!'
         });
     }
 
