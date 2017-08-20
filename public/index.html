@@ -25,10 +25,10 @@
 						autocapitalize="off"
 						spellcheck="false"
 						v-model="user.name"
-						v-on:keyup.enter="onLogin">
+						v-on:keyup.enter="login">
 				</div>
 				<div class="col-xs-12">
-					<button class="login-card__button" v-on:click="onLogin">start</button>
+					<button class="login-card__button" v-on:click="login">start</button>
 				</div>
 			</div>
 		</section>
@@ -38,7 +38,7 @@
 			</div>
 		</section>
 		<section class="game-card" v-show="isStatePlaying">
-			<h2 class="game-card__turn">{{ whosTurn }} turn!</h2>
+			<h2 class="game-card__turn">{{ whosTurn }}</h2>
 			<div class="scoreboard">
 				<div class="player pull-left"><span class="player__marker">{{ game.players.me.marker }}</span> <span class="player__name">You</span></div>
 				<div class="player pull-right"><span class="player__marker">{{ game.players.opponent.marker }}</span> <span class="player__name">{{ game.players.opponent.name }}</span></div>

@@ -71,7 +71,7 @@ class StateManager {
 
     		playerX.socket.emit('game.start', {
     			gameId: game.id,
-    			isMyTurn: (game.turn === Game.Marker.X),
+                turn: (game.turn === Game.Marker.O) ? Game.Marker.O : Game.Marker.X,
                 players: {
                     me: {
                         marker: Game.Marker.X
@@ -86,7 +86,7 @@ class StateManager {
 
     		playerO.socket.emit('game.start', {
     			gameId: game.id,
-                isMyTurn: (game.turn === Game.Marker.O),
+                turn: (game.turn === Game.Marker.O) ? Game.Marker.O : Game.Marker.X,
     			players: {
                     me: {
         				marker: Game.Marker.O
