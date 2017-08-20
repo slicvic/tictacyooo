@@ -126,6 +126,5 @@ h1 {
 	padding: 10px 20px;
 	border-radius: 6px;
 	background-color: #c0c0c0;
-	border-right: 2px solid #6c6c6c outset;
-	border-bottom: 2px solid #6c6c6c outset;
+	border: 0;
 }
