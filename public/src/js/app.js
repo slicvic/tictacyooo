@@ -242,7 +242,7 @@ const app = function (Vue) {
                 return this.state === State.Playing;
             },
             whosTurn() {
-                return (this.game.isMyTurn) ? 'Your' : `${this.game.players.opponent.name}'s`;
+                return (this.game.isMyTurn) ? 'Yo' : `${this.game.players.opponent.name}'s`;
             }
         }
     });
