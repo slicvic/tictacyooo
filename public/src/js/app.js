@@ -1,14 +1,17 @@
 const app = function (Vue) {
     const SERVER_URL = 'http://192.167.10.10:3001';
-    const STATE_JOIN = 'join';
-    const STATE_AWAITING_OPPONENT = 'awaitingOpponent';
-    const STATE_PLAYING = 'playing';
+    let State = {
+        Join: 'join',
+        AwaitingOpponent: 'awaitingOpponent',
+        Playing: 'playing'
+    };
+
     const vm = new Vue({
         el: '#app',
         data: {
             socket: null,
 
-            state: STATE_JOIN,
+            state: State.Join,
 
             user: {
                 id: '',
@@ -65,7 +68,7 @@ const app = function (Vue) {
             this.socket.on('player.joinResponse', (data) => {
                 if (data.success) {
                     this.user.id = data.playerId;
-                    this.state = STATE_AWAITING_OPPONENT;
+                    this.state = State.AwaitingOpponent;
                     this.socket.emit('player.findOpponent', {
                         playerId: this.user.id
                     });
@@ -76,7 +79,7 @@ const app = function (Vue) {
 
             this.socket.on('player.findOpponentResponse', (data) => {
                 if (!data.success) {
-                    this.state = STATE_JOIN;
+                    this.state = State.Join;
                     this.showToast(data.message);
                 }
             });
@@ -113,7 +116,7 @@ const app = function (Vue) {
                 this.game.players.opponent.name = data.players.opponent.name;
                 this.game.players.opponent.marker = data.players.opponent.marker;
                 this.game.board = ['', '', '', '', '', '', '', '', ''];
-                this.state = STATE_PLAYING;
+                this.state = State.Playing;
             });
 
             this.socket.on('game.opponentLeft', (data) => {
@@ -122,7 +125,7 @@ const app = function (Vue) {
                     okButton: {
                         text: 'OK',
                         onClick: () => {
-                            this.state = STATE_AWAITING_OPPONENT;
+                            this.state = State.AwaitingOpponent;
                             this.socket.emit('player.findOpponent', {
                                 playerId: this.user.id
                             });
@@ -177,13 +180,13 @@ const app = function (Vue) {
         },
         computed: {
             isStateJoin() {
-                return this.state === STATE_JOIN;
+                return this.state === State.Join;
             },
             isStateAwaitingOpponent() {
-                return this.state === STATE_AWAITING_OPPONENT;
+                return this.state === State.AwaitingOpponent;
             },
             isStatePlaying() {
-                return this.state === STATE_PLAYING;
+                return this.state === State.Playing;
             },
             whosTurn() {
                 return (this.game.isMyTurn) ? 'Your' : `${this.game.players.opponent.name}'s`;
