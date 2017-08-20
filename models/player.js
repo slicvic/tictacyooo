@@ -1,5 +1,5 @@
 /**
- * A player object.
+ * This class represents a player.
  */
 class Player {
     /**
@@ -15,8 +15,8 @@ class Player {
             throw Error('Invalid argument id');
         }
 
-        if (!(typeof name === 'string' && name.length >= Player.NAME_LENGTH_MIN && name.length <= Player.NAME_LENGTH_MAX)) {
-            throw Error(`Yo name must be between ${Player.NAME_LENGTH_MIN} and ${Player.NAME_LENGTH_MAX} characters!`);
+        if (!(typeof name === 'string' && name.length >= Player.NAME_MIN_LENGTH && name.length <= Player.NAME_MAX_LENGTH)) {
+            throw Error(`Yo name must be between ${Player.NAME_MIN_LENGTH} and ${Player.NAME_MAX_LENGTH} characters!`);
         }
 
         if (!(
@@ -86,7 +86,7 @@ Player.Status = {
     Away: 'Away'
 };
 
-Player.NAME_LENGTH_MIN = 3;
-Player.NAME_LENGTH_MAX = 10;
+Player.NAME_MIN_LENGTH = 3;
+Player.NAME_MAX_LENGTH = 10;
 
 module.exports = Player;

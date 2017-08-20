@@ -17,19 +17,19 @@ const app = function (Vue) {
 
             toast: {
                 message: '',
-                isVisible: false
+                isDisplayed: false
             },
 
             alert: {
                 message: '',
-                isVisible: false,
+                isDisplayed: false,
                 okButton: {
                     text: 'OK',
                     onClick: null
                 },
                 cancelButton: {
                     text: 'Cancel',
-                    isVisible: false
+                    isDisplayed: false
                 }
             },
 
@@ -84,7 +84,7 @@ const app = function (Vue) {
             this.socket.on('player.moveResponse', (data) => {
                 if (data.success) {
                     this.game.isMyTurn = false;
-                    this.game.board[data.position - 1] = this.game.players.me.marker;
+                    this.game.board[data.cellNumber - 1] = this.game.players.me.marker;
                     if (data.status === this.game.players.me.marker) {
                         this.showAlert({
                             message: 'You won!'
@@ -97,7 +97,7 @@ const app = function (Vue) {
 
             this.socket.on('game.opponentMove', (data) => {
                 this.game.isMyTurn = true;
-                this.game.board[data.position - 1] = this.game.players.opponent.marker;
+                this.game.board[data.cellNumber - 1] = this.game.players.opponent.marker;
                 if (data.status === this.game.players.opponent.marker) {
                     this.showAlert({
                         message: this.game.players.opponent.name + ' won!'
@@ -139,21 +139,21 @@ const app = function (Vue) {
                     name: this.user.name
                 });
             },
-            makeMove(position) {
+            makeMove(cellNumber) {
                 this.socket.emit('player.move', {
                     gameId: this.game.id,
                     playerId: this.user.id,
-                    position: position
+                    cellNumber: cellNumber
                 });
             },
             showToast(message) {
                 this.toast.message = message;
-                this.toast.isVisible = true;
+                this.toast.isDisplayed = true;
             },
             hideToast() {
-                this.toast.isVisible = false;
+                this.toast.isDisplayed = false;
             },
-            showAlert({message, okButton = {text: 'OK', onClick: null}, cancelButton = {text: 'Cancel', isVisible: false}} = {}) {
+            showAlert({message, okButton = {text: 'OK', onClick: null}, cancelButton = {text: 'Cancel', isDisplayed: false}} = {}) {
                 this.alert.message = message;
                 this.alert.okButton.text = okButton.text;
                 this.alert.okButton.onClick = () => {
@@ -163,15 +163,15 @@ const app = function (Vue) {
                     this.hideAlert();
                 }
 
-                if (cancelButton.isVisible) {
+                if (cancelButton.isDisplayed) {
                     this.alert.cancelButton.text = cancelButton.text;
-                    this.alert.cancelButton.isVisible = true;
+                    this.alert.cancelButton.isDisplayed = true;
                 }
 
-                this.alert.isVisible = true;
+                this.alert.isDisplayed = true;
             },
             hideAlert() {
-                this.alert.isVisible = false;
+                this.alert.isDisplayed = false;
                 this.alert.okButton.onClick = null;
             }
         },

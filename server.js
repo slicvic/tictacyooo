@@ -30,7 +30,7 @@ socketManager.onConnect(function(socket, socketId) {
         // Notify opponent and update game status, if in game
         for (let gameId in stateManager.games) {
             const game = stateManager.games[gameId];
-            if (game.status === Game.Status.InProgress && game.findPlayerById(socketId)) {
+            if (game.status === Game.Status.InProgress && game.getPlayerById(socketId)) {
                 let opponent;
                 if (socketId === game.playerO.id) {
                     opponent = game.playerX;
@@ -87,7 +87,7 @@ socketManager.onConnect(function(socket, socketId) {
         if (typeof data === 'object'
             && typeof data.gameId === 'string'
             && typeof data.playerId === 'string'
-            && typeof data.position === 'number'
+            && typeof data.cellNumber === 'number'
             && stateManager.doesPlayerExist(data.playerId)
             && stateManager.doesGameExist(data.gameId)
         ) {
@@ -95,10 +95,10 @@ socketManager.onConnect(function(socket, socketId) {
             const player = stateManager.players[data.playerId];
 
             try {
-                game.makeMove(player.id, data.position);
+                game.makeMove(player.id, data.cellNumber);
 
                 this.emitMoveResponse(socket, {
-                    position: data.position,
+                    cellNumber: data.cellNumber,
                     status: game.status,
                     success: true
                 });
@@ -106,7 +106,7 @@ socketManager.onConnect(function(socket, socketId) {
                 // Notify opponent
                 const opponent = (player.id === game.playerX.id) ? game.playerO : game.playerX;
                 this.emitOpponentMove(opponent.socket, {
-                    position: data.position,
+                    cellNumber: data.cellNumber,
                     status: game.status
                 });
             } catch (e) {

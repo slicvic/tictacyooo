@@ -1,7 +1,7 @@
 const Player = require('./player');
 
 /**
- * A game class.
+ * This class represents a game.
  */
 class Game {
     /**
@@ -36,6 +36,7 @@ class Game {
         this._playerO = playerO;
         this.status = status;
         this._board = [];
+
         for (let i = 1; i < 10; i++) {
             this._board.push(Game.Marker.Empty);
         }
@@ -129,7 +130,7 @@ class Game {
      * @param  {string} playerId
      * @return {Player|null}
      */
-    findPlayerById(playerId) {
+    getPlayerById(playerId) {
         if (playerId === this._playerX.id) {
             return this._playerX;
         }
@@ -144,22 +145,22 @@ class Game {
     /**
      * Make a move.
      * @param  {string} playerId
-     * @param  {number} position
+     * @param  {number} cellNumber
      * @return {string}
      * @throws {Error}
      */
-    makeMove(playerId, position) {
+    makeMove(playerId, cellNumber) {
         if (this.isOver()) {
             throw Error('Too late yo! Game over!');
         }
 
-        position = Number(position);
+        cellNumber = Number(cellNumber);
 
-        if (!(position >= 1 && position <= 9)) {
+        if (!(cellNumber >= 1 && cellNumber <= 9)) {
             throw Error('Bad move yo! Out of bounds!');
         }
 
-        const player = this.findPlayerById(playerId);
+        const player = this.getPlayerById(playerId);
 
         if (!player) {
             throw Error("Chill out yo! Ain'tcha game!");
@@ -169,17 +170,17 @@ class Game {
             throw Error("Chill out yo! Ain'tcha turn!");
         }
 
-        const index = (position - 1);
+        const cellIndex = (cellNumber - 1);
 
-        if (this._board[index] !== Game.Marker.Empty) {
+        if (this._board[cellIndex] !== Game.Marker.Empty) {
             throw Error('Too late yo! Play already made!');
         }
 
         if (player.id === this._playerX.id) {
-            this._board[index] = Game.Marker.X;
+            this._board[cellIndex] = Game.Marker.X;
             this._turn = Game.Marker.O;
         } else {
-            this._board[index] = Game.Marker.O;
+            this._board[cellIndex] = Game.Marker.O;
             this._turn = Game.Marker.X;
         }
 
@@ -187,72 +188,72 @@ class Game {
     }
 
     _checkStatus() {
-        // First row
-        if (this._board[0] != ''
+        // First row wins
+        if (this._board[0] != Game.Marker.Empty
             && this._board[0] == this._board[1]
             && this._board[1] == this._board[2]
         ) {
             this._status = Game.Status.Win[this._board[0]];
         }
-        // Second row
-        else if (this._board[3] != ''
+        // Second row wins
+        else if (this._board[3] != Game.Marker.Empty
             && this._board[3] == this._board[4]
             && this._board[4] == this._board[5]
         ) {
             this._status = Game.Status.Win[this._board[3]];
         }
-        // Third row
-        else if (this._board[6] != ''
+        // Third row wins
+        else if (this._board[6] != Game.Marker.Empty
             && this._board[6] == this._board[7]
             && this._board[7] == this._board[8]
         ) {
             this._status = Game.Status.Win[this._board[6]];
         }
-        // First column
-        else if (this._board[0] != ''
+        // First column wins
+        else if (this._board[0] != Game.Marker.Empty
             && this._board[0] == this._board[3]
             && this._board[3] == this._board[6]
         ) {
             this._status = Game.Status.Win[this._board[0]];
         }
-        // Second column
-        else if (this._board[1] != ''
+        // Second column wins
+        else if (this._board[1] != Game.Marker.Empty
             && this._board[1] == this._board[4]
             && this._board[4] == this._board[7]
         ) {
             this._status = Game.Status.Win[this._board[1]];
         }
-        // Third column
-        else if (this._board[2] != ''
+        // Third column wins
+        else if (this._board[2] != Game.Marker.Empty
             && this._board[2] == this._board[5]
             && this._board[5] == this._board[8]
         ) {
             this._status = Game.Status.Win[this._board[2]];
         }
-        // Across right
-        else if (this._board[0] != ''
+        // Across right wins
+        else if (this._board[0] != Game.Marker.Empty
             && this._board[0] == this._board[4]
             && this._board[4] == this._board[8]
         ) {
             this._status = Game.Status.Win[this._board[0]];
         }
-        // Across left
-        else if (this._board[2] != ''
+        // Across left wins
+        else if (this._board[2] != Game.Marker.Empty
             && this._board[2] == this._board[4]
             && this._board[4] == this._board[6]
         ) {
             this._status = Game.Status.Win[this._board[2]];
         }
-        // Squares are filled, we have a draw
-        else if (this._board[0] != ''
-            && this._board[1] != ''
-            && this._board[2] != ''
-            && this._board[3] != ''
-            && this._board[4] != ''
-            && this._board[5] != ''
-            && this._board[6] != ''
-            && this._board[7] != ''
-            && this._board[8] != ''
+        // Draw
+        else if (this._board[0] != Game.Marker.Empty
+            && this._board[1] != Game.Marker.Empty
+            && this._board[2] != Game.Marker.Empty
+            && this._board[3] != Game.Marker.Empty
+            && this._board[4] != Game.Marker.Empty
+            && this._board[5] != Game.Marker.Empty
+            && this._board[6] != Game.Marker.Empty
+            && this._board[7] != Game.Marker.Empty
+            && this._board[8] != Game.Marker.Empty
         ) {
             this._status = Game.Status.Draw;
         }
