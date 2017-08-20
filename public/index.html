@@ -25,7 +25,7 @@
 				</div>
 			</div>
 		</section>
-		<section class="awaiting-opponent-card container" v-show="isStateAwaitingOpponent">
+		<section class="awaiting-opponent-card container" v-show="isStateFindOpponent">
 			<div class="row">
 				<div class="col-xs-12">Awaiting opponent...</div>
 			</div>
@@ -33,7 +33,7 @@
 		<section class="game-card" v-show="isStatePlaying">
 			<h2 class="game-card__turn">{{ whosTurn }} turn!</h2>
 			<div class="scoreboard">
-				<div class="player pull-left"><span class="player__marker">{{ game.players.me.marker }}</span> <span class="player__name">Me</span></div>
+				<div class="player pull-left"><span class="player__marker">{{ game.players.me.marker }}</span> <span class="player__name">You</span></div>
 				<div class="player pull-right"><span class="player__marker">{{ game.players.opponent.marker }}</span> <span class="player__name">{{ game.players.opponent.name }}</span></div>
 			</div>
 			<div class="clearfix"></div>
@@ -55,11 +55,11 @@
 				</div>
 			</div>
 		</section>
-		<div class="toast" v-cloak v-show="toast.isDisplayed" v-on:click="hideToast">{{ toast.message }}</div>
-		<div class="alert" v-cloak v-show="alert.isDisplayed">
+		<div class="toast" v-cloak v-show="toast.show" v-on:click="hideToast">{{ toast.message }}</div>
+		<div class="alert" v-cloak v-show="alert.show">
 			<div class="alert__message">{{ alert.message }}</div>
 			<button class="alert__button alert__button--ok" v-on:click="alert.okButton.onClick" v-text="alert.okButton.text"></button>
-			<button class="alert__button alert__button--cancel" v-show="alert.cancelButton.isDisplayed" v-on:click="hideAlert()" v-text="alert.cancelButton.text"></button>
+			<button class="alert__button alert__button--cancel" v-show="alert.cancelButton.show" v-on:click="alert.cancelButton.onClick" v-text="alert.cancelButton.text"></button>
 		</div>
 		<footer>
 			<small>

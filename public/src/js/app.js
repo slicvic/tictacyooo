@@ -1,12 +1,13 @@
 const app = function (Vue) {
-    const SERVER_URL = 'http://192.167.10.10:3001';
+    const SERVER_URL = window.location.origin;
+
     let State = {
         Join: 'join',
-        AwaitingOpponent: 'awaitingOpponent',
+        FindOpponent: 'findOpponent',
         Playing: 'playing'
     };
 
-    const vm = new Vue({
+    const vueModel = new Vue({
         el: '#app',
         data: {
             socket: null,
@@ -20,19 +21,20 @@ const app = function (Vue) {
 
             toast: {
                 message: '',
-                isDisplayed: false
+                show: false
             },
 
             alert: {
                 message: '',
-                isDisplayed: false,
+                show: false,
                 okButton: {
-                    text: 'OK',
+                    text: '',
                     onClick: null
                 },
                 cancelButton: {
-                    text: 'Cancel',
-                    isDisplayed: false
+                    text: '',
+                    show: false,
+                    onClick: null
                 }
             },
 
@@ -68,19 +70,20 @@ const app = function (Vue) {
             this.socket.on('player.joinResponse', (data) => {
                 if (data.success) {
                     this.user.id = data.playerId;
-                    this.state = State.AwaitingOpponent;
-                    this.socket.emit('player.findOpponent', {
-                        playerId: this.user.id
-                    });
+                    this.setState(State.FindOpponent);
                 } else {
-                    this.showToast(data.message);
+                    this.showAlert({
+                        message: data.message
+                    });
                 }
             });
 
             this.socket.on('player.findOpponentResponse', (data) => {
                 if (!data.success) {
                     this.state = State.Join;
-                    this.showToast(data.message);
+                    this.showAlert({
+                        message: data.message
+                    });
                 }
             });
 
@@ -90,11 +93,25 @@ const app = function (Vue) {
                     this.game.board[data.cellNumber - 1] = this.game.players.me.marker;
                     if (data.status === this.game.players.me.marker) {
                         this.showAlert({
-                            message: 'You won!'
+                            message: 'You win!',
+                            okButton: {
+                                text: 'New Game',
+                                onClick: () => {
+                                    this.setState(State.FindOpponent);
+                                }
+                            },
+                            cancelButton: {
+                                text: 'Peace Out',
+                                onClick: () => {
+                                    this.setState(State.Join);
+                                }
+                            }
                         });
                     }
                 } else {
-                    this.showToast(data.message);
+                    this.showAlert({
+                        message: data.message,
+                    });
                 }
             });
 
@@ -103,7 +120,19 @@ const app = function (Vue) {
                 this.game.board[data.cellNumber - 1] = this.game.players.opponent.marker;
                 if (data.status === this.game.players.opponent.marker) {
                     this.showAlert({
-                        message: this.game.players.opponent.name + ' won!'
+                        message: this.game.players.opponent.name + ' wins!',
+                        okButton: {
+                            text: 'New Game',
+                            onClick: () => {
+                                this.setState(State.FindOpponent);
+                            }
+                        },
+                        cancelButton: {
+                            text: 'Peace Out',
+                            onClick: () => {
+                                this.setState(State.Join);
+                            }
+                        }
                     });
                 }
             });
@@ -123,12 +152,15 @@ const app = function (Vue) {
                 this.showAlert({
                     message: data.message,
                     okButton: {
-                        text: 'OK',
+                        text: 'New Game',
                         onClick: () => {
-                            this.state = State.AwaitingOpponent;
-                            this.socket.emit('player.findOpponent', {
-                                playerId: this.user.id
-                            });
+                            this.setState(State.FindOpponent);
+                        }
+                    },
+                    cancelButton: {
+                        text: 'Peace Out',
+                        onClick: () => {
+                            this.setState(State.Join);
                         }
                     }
                 });
@@ -136,11 +168,24 @@ const app = function (Vue) {
         },
         methods: {
             onJoin() {
-                this.hideToast();
-
+                this.hideAlert();
                 this.socket.emit('player.join', {
                     name: this.user.name
                 });
+            },
+            setState: function(state) {
+                switch (state) {
+                    case State.FindOpponent:
+                        this.state = State.FindOpponent;
+                        this.socket.emit('player.findOpponent', {
+                            playerId: this.user.id
+                        });
+                        break;
+
+                    case State.Join:
+                        this.state = State.Join;
+                        break;
+                }
             },
             makeMove(cellNumber) {
                 this.socket.emit('player.move', {
@@ -151,39 +196,49 @@ const app = function (Vue) {
             },
             showToast(message) {
                 this.toast.message = message;
-                this.toast.isDisplayed = true;
+                this.toast.show = true;
             },
             hideToast() {
-                this.toast.isDisplayed = false;
+                this.toast.show = false;
             },
-            showAlert({message, okButton = {text: 'OK', onClick: null}, cancelButton = {text: 'Cancel', isDisplayed: false}} = {}) {
+            showAlert({message, okButton = {text: 'Aight', onClick: null}, cancelButton = null} = {}) {
                 this.alert.message = message;
+
                 this.alert.okButton.text = okButton.text;
                 this.alert.okButton.onClick = () => {
+                    this.hideAlert();
                     if (typeof okButton.onClick === 'function') {
                         okButton.onClick()
                     }
-                    this.hideAlert();
                 }
 
-                if (cancelButton.isDisplayed) {
+                if (cancelButton) {
                     this.alert.cancelButton.text = cancelButton.text;
-                    this.alert.cancelButton.isDisplayed = true;
+                    this.alert.cancelButton.show = true;
+                    this.alert.cancelButton.onClick = () => {
+                        this.hideAlert();
+                        if (typeof cancelButton.onClick === 'function') {
+                            cancelButton.onClick()
+                        }
+                    }
                 }
 
-                this.alert.isDisplayed = true;
+                this.alert.show = true;
             },
             hideAlert() {
-                this.alert.isDisplayed = false;
+                this.alert.show = false;
                 this.alert.okButton.onClick = null;
+                this.alert.cancelButton.show = false;
+                this.alert.cancelButton.onClick = null;
+
             }
         },
         computed: {
             isStateJoin() {
                 return this.state === State.Join;
             },
-            isStateAwaitingOpponent() {
-                return this.state === State.AwaitingOpponent;
+            isStateFindOpponent() {
+                return this.state === State.FindOpponent;
             },
             isStatePlaying() {
                 return this.state === State.Playing;
@@ -195,6 +250,6 @@ const app = function (Vue) {
     });
 
     return {
-        vm: vm
+        vueModel: vueModel
     }
 }(Vue);
