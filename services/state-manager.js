@@ -10,24 +10,9 @@ class StateManager {
      * Create a new instance.
      */
     constructor() {
-        this._players = {};
-        this._games = {};
-    }
-
-    /**
-     * Get players.
-     * @return {Object}
-     */
-    get players() {
-        return this._players;
-    }
-
-    /**
-     * Get games.
-     * @return {Object}
-     */
-    get games() {
-        return this._games;
+        this.connectedCounter = 0;
+        this.players = {};
+        this.games = {};
     }
 
     /**
@@ -35,7 +20,7 @@ class StateManager {
      * @return {number}
      */
     countGames() {
-        return Object.keys(this._games).length;
+        return Object.keys(this.games).length;
     }
 
     /**
@@ -43,7 +28,7 @@ class StateManager {
      * @return {number}
      */
     countPlayers() {
-        return Object.keys(this._players).length;
+        return Object.keys(this.players).length;
     }
 
     /**
@@ -51,8 +36,8 @@ class StateManager {
      * @param  {string} gameId
      * @return {boolean}
      */
-    doesGameExist(gameId) {
-        return (this._games[gameId] instanceof Game);
+    gameExists(gameId) {
+        return (this.games[gameId] instanceof Game);
     }
 
     /**
@@ -60,8 +45,8 @@ class StateManager {
      * @param  {string} playerId
      * @return {boolean}
      */
-    doesPlayerExist(playerId) {
-        return (this._players[playerId] instanceof Player);
+    playerExists(playerId) {
+        return (this.players[playerId] instanceof Player);
     }
 
     /**
@@ -73,12 +58,12 @@ class StateManager {
     		throw 'Invalid argument playerX';
     	}
 
-    	for (let playerId in this._players) {
-    		if (playerId === playerX.id || this._players[playerId].status !== Player.Status.AwaitingOpponent) {
+    	for (let playerId in this.players) {
+    		if (playerId === playerX.id || this.players[playerId].status !== Player.Status.AwaitingOpponent) {
     			continue;
     		}
 
-    		const playerO = this._players[playerId];
+    		const playerO = this.players[playerId];
             const firstTurn = (mathHelper.random() % 2 === 0) ? Game.Marker.X : Game.Marker.O;
     		const game = new Game({playerX: playerX, playerO: playerO, firstTurn: firstTurn});
 
@@ -115,7 +100,7 @@ class StateManager {
                 }
     		});
 
-            this._games[game.id] = game;
+            this.games[game.id] = game;
 
     		break;
     	}

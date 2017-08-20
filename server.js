@@ -15,19 +15,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules/socket.io-client/dist')));
 
 socketManager.onConnect(function(socket, socketId) {
-    this.emitStats({
-        players: stateManager.countPlayers(),
-        games: stateManager.countGames()
-    });
-
-    // Player disconnected
+    // On player disconnect
     this.onDisconnect(socket, () => {
-        // Change player status to "away"
+        // Remove player from storage
         if (stateManager.players[socketId] instanceof Player) {
-            stateManager.players[socketId].status = Player.Status.Away;
+            delete stateManager.players[socketId];
         }
 
-        // Notify opponent and update game status, if in game
+        // Notify their opponent and if in game, update game status
         for (let gameId in stateManager.games) {
             const game = stateManager.games[gameId];
             if (game.status === Game.Status.InProgress && game.getPlayerById(socketId)) {
@@ -44,7 +39,7 @@ socketManager.onConnect(function(socket, socketId) {
         }
     });
 
-    // Player joined game
+    // On player join
     this.onJoin(socket, (data) => {
         try {
             if (!(typeof data === 'object' && typeof data.name === 'string')) {
@@ -64,11 +59,11 @@ socketManager.onConnect(function(socket, socketId) {
         }
     });
 
-    // Player is looking for opponent
+    // On find opponent
     this.onFindOpponent(socket, (data) => {
         if (typeof data === 'object'
             && typeof data.playerId === 'string'
-            && stateManager.doesPlayerExist(data.playerId)
+            && stateManager.playerExists(data.playerId)
         ) {
             const player = stateManager.players[data.playerId];
             player.status = Player.Status.AwaitingOpponent;
@@ -82,14 +77,14 @@ socketManager.onConnect(function(socket, socketId) {
         }
     });
 
-    // Player made a move
+    // On player move
     this.onMove(socket, (data) => {
         if (typeof data === 'object'
             && typeof data.gameId === 'string'
             && typeof data.playerId === 'string'
             && typeof data.cellNumber === 'number'
-            && stateManager.doesPlayerExist(data.playerId)
-            && stateManager.doesGameExist(data.gameId)
+            && stateManager.playerExists(data.playerId)
+            && stateManager.gameExists(data.gameId)
         ) {
             const game = stateManager.games[data.gameId];
             const player = stateManager.players[data.playerId];
