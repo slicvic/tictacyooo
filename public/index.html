@@ -18,7 +18,14 @@
 					<label class="login-card__label">What's yooo name?</label>
 				</div>
 				<div class="col-xs-12">
-					<input type="text" class="login-card__input" maxlength="8" v-model="user.name" v-on:keyup.enter="onLogin">
+					<input type="text" class="login-card__input"
+						maxlength="8"
+						autocomplete="off"
+						autocorrect="off"
+						autocapitalize="off"
+						spellcheck="false"
+						v-model="user.name"
+						v-on:keyup.enter="onLogin">
 				</div>
 				<div class="col-xs-12">
 					<button class="login-card__button" v-on:click="onLogin">start</button>
