@@ -6,8 +6,8 @@ class SocketManager {
      * Generate a unique socket id.
      * @param {Object} socket
      */
-    static generateSocketId(socket, playerName) {
-        return Buffer.from(socket.request.connection.remoteAddress + JSON.stringify(socket.request.headers)).toString('base64');
+    static generateSocketId(socket) {
+        return Buffer.from(socket.request.client._peername.address + socket.request.connection.remoteAddress + socket.request.headers['user-agent']).toString('base64');
     }
 
     /**
