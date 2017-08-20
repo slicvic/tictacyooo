@@ -119,7 +119,7 @@ class SocketManager {
      */
     emitOpponentLeft(socket) {
         socket.emit('game.opponentLeft', {
-            message: 'Your opponent left the game!'
+            message: 'Your opponent left the game! You win!'
         });
     }
 
