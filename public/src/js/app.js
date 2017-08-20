@@ -62,11 +62,6 @@ const app = function (Vue) {
         created() {
             this.socket = io(SERVER_URL);
 
-            this.socket.on('stats', (data) => {
-                this.stats.players = data.players;
-                this.stats.games = data.games;
-            });
-
             this.socket.on('player.joinResponse', (data) => {
                 if (data.success) {
                     this.user.id = data.playerId;
@@ -248,8 +243,4 @@ const app = function (Vue) {
             }
         }
     });
-
-    return {
-        vueModel: vueModel
-    }
 }(Vue);
