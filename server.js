@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, 'node_modules/socket.io-client/dist'
 socketManager.onConnect(function(socket, socketId) {
     // On player disconnect
     this.onDisconnect(socket, () => {
-        // Remove player from storage
+        // Remove player record
         if (stateManager.players[socketId] instanceof Player) {
             delete stateManager.players[socketId];
         }
@@ -35,6 +35,8 @@ socketManager.onConnect(function(socket, socketId) {
                     game.status = Game.Status.Win.O;
                 }
                 this.emitOpponentLeft(opponent.socket);
+                // Remove game record
+                delete stateManager.games[gameId];
             }
         }
     });
@@ -104,6 +106,11 @@ socketManager.onConnect(function(socket, socketId) {
                     cellNumber: data.cellNumber,
                     status: game.status
                 });
+
+                // Remove game record
+                if (game.isOver()) {
+                    delete stateManager.games[game.id];
+                }
             } catch (e) {
                 this.emitMoveResponse(socket, {
                     success: false,
