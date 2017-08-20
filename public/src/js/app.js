@@ -2,7 +2,7 @@ const app = function (Vue) {
     const SERVER_URL = window.location.origin;
 
     let State = {
-        Join: 'join',
+        Login: 'login',
         FindOpponent: 'findOpponent',
         Playing: 'playing'
     };
@@ -12,7 +12,7 @@ const app = function (Vue) {
         data: {
             socket: null,
 
-            state: State.Join,
+            state: State.Login,
 
             user: {
                 id: '',
@@ -62,7 +62,7 @@ const app = function (Vue) {
         created() {
             this.socket = io(SERVER_URL);
 
-            this.socket.on('player.joinResponse', (data) => {
+            this.socket.on('player.loginResponse', (data) => {
                 if (data.success) {
                     this.user.id = data.playerId;
                     this.setState(State.FindOpponent);
@@ -75,7 +75,7 @@ const app = function (Vue) {
 
             this.socket.on('player.findOpponentResponse', (data) => {
                 if (!data.success) {
-                    this.state = State.Join;
+                    this.state = State.Login;
                     this.showAlert({
                         message: data.message
                     });
@@ -98,7 +98,7 @@ const app = function (Vue) {
                             cancelButton: {
                                 text: 'Peace Out',
                                 onClick: () => {
-                                    this.setState(State.Join);
+                                    this.setState(State.Login);
                                 }
                             }
                         });
@@ -125,7 +125,7 @@ const app = function (Vue) {
                         cancelButton: {
                             text: 'Peace Out',
                             onClick: () => {
-                                this.setState(State.Join);
+                                this.setState(State.Login);
                             }
                         }
                     });
@@ -155,16 +155,16 @@ const app = function (Vue) {
                     cancelButton: {
                         text: 'Peace Out',
                         onClick: () => {
-                            this.setState(State.Join);
+                            this.setState(State.Login);
                         }
                     }
                 });
             });
         },
         methods: {
-            onJoin() {
+            onLogin() {
                 this.hideAlert();
-                this.socket.emit('player.join', {
+                this.socket.emit('player.login', {
                     name: this.user.name
                 });
             },
@@ -177,8 +177,8 @@ const app = function (Vue) {
                         });
                         break;
 
-                    case State.Join:
-                        this.state = State.Join;
+                    case State.Login:
+                        this.state = State.Login;
                         break;
                 }
             },
@@ -229,8 +229,8 @@ const app = function (Vue) {
             }
         },
         computed: {
-            isStateJoin() {
-                return this.state === State.Join;
+            isStateLogin() {
+                return this.state === State.Login;
             },
             isStateFindOpponent() {
                 return this.state === State.FindOpponent;

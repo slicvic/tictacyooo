@@ -40,8 +40,8 @@ class SocketManager {
      * @param {Object} socket
      * @param {Function} callback
      */
-    onJoin(socket, callback) {
-        socket.on('player.join', callback.bind(this));
+    onLogin(socket, callback) {
+        socket.on('player.login', callback.bind(this));
     }
 
     /**
@@ -63,12 +63,12 @@ class SocketManager {
     }
 
     /**
-     * Notify a player if his request to join was success or not.
+     * Notify a player if his request to login was success or not.
      * @param {Object} socket
      * @param {Object} responseData
      */
-    emitJoinResponse(socket, {success = false, playerId = '', message = ''} = {}) {
-        socket.emit('player.joinResponse', {
+    emitLoginResponse(socket, {success = false, playerId = '', message = ''} = {}) {
+        socket.emit('player.loginResponse', {
             success,
             playerId,
             message

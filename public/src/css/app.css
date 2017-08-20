@@ -34,11 +34,11 @@ h1 {
   display: none;
 }
 
-.join-card__label {
+.login-card__label {
 	font-size: 30px;
 }
 
-.join-card__input {
+.login-card__input {
 	border: 2px solid #444;
 	font-size: 30px;
 	padding: 10px 0;
@@ -50,7 +50,7 @@ h1 {
 	margin: 20px 0;
 }
 
-.join-card__button {
+.login-card__button {
 	width: 200px;
 	font-size: 40px;
 	line-height: 1.8;
@@ -60,7 +60,7 @@ h1 {
 	color: #fff;
 }
 
-.awaiting-opponent-card {
+.find-opponent-card {
 	font-size: 30px;
 	padding: 40px 0;
 }

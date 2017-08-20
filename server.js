@@ -39,20 +39,20 @@ socketManager.onConnect(function(socket, socketId) {
         }
     });
 
-    // On player join
-    this.onJoin(socket, (data) => {
+    // On player login
+    this.onLogin(socket, (data) => {
         try {
             if (!(typeof data === 'object' && typeof data.name === 'string')) {
                 throw Error('Invalid request data');
             }
             const player = new Player({id: socketId, name: data.name, socket: socket});
             stateManager.players[player.id] = player;
-            this.emitJoinResponse(socket, {
+            this.emitLoginResponse(socket, {
                 success: true,
                 playerId: player.id
             });
         } catch (e) {
-            this.emitJoinResponse(socket, {
+            this.emitLoginResponse(socket, {
                 success: false,
                 message: e.message
             });

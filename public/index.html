@@ -12,20 +12,20 @@
 		<header>
 			<h1>Tic Tac Yooo!</h1>
 		</header>
-		<section class="join-card container" v-show="isStateJoin">
+		<section class="login-card container" v-show="isStateLogin">
 			<div class="row">
 				<div class="col-xs-12">
-					<label class="join-card__label">What's yooo name?</label>
+					<label class="login-card__label">What's yooo name?</label>
 				</div>
 				<div class="col-xs-12">
-					<input type="text" class="join-card__input" maxlength="8" v-model="user.name" v-on:keyup.enter="onJoin">
+					<input type="text" class="login-card__input" maxlength="8" v-model="user.name" v-on:keyup.enter="onLogin">
 				</div>
 				<div class="col-xs-12">
-					<button class="join-card__button" v-on:click="onJoin">start</button>
+					<button class="login-card__button" v-on:click="onLogin">start</button>
 				</div>
 			</div>
 		</section>
-		<section class="awaiting-opponent-card container" v-show="isStateFindOpponent">
+		<section class="find-opponent-card container" v-show="isStateFindOpponent">
 			<div class="row">
 				<div class="col-xs-12">Awaiting opponent...</div>
 			</div>
