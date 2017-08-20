@@ -163,11 +163,11 @@ class Game {
         const player = this.getPlayerById(playerId);
 
         if (!player) {
-            throw Error("Chill out yo! Ain'tcha game!");
+            throw Error("Chill out yo! Ain't cha game!");
         }
 
         if (!this.isPlayerTurn(player)) {
-            throw Error("Chill out yo! Ain'tcha turn!");
+            throw Error("Chill out yo! Ain't cha turn!");
         }
 
         const cellIndex = (cellNumber - 1);
