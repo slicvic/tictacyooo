@@ -7,7 +7,7 @@ class SocketManager {
      * @param {Object} socket
      */
     static generateSocketId(socket) {
-        return Buffer.from(socket.request.client._peername.address + socket.request.connection.remoteAddress + socket.request.headers['user-agent']).toString('base64');
+        return Buffer.from(socket.request.connection.remoteAddress + socket.request.headers['user-agent'] + socket.request.headers['cookie']).toString('base64');
     }
 
     /**
