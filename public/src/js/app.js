@@ -39,8 +39,7 @@ const app = function (Vue) {
             },
 
             stats: {
-                players: 0,
-                games: 0
+                connectionCount: 0
             },
 
             game: {
@@ -61,6 +60,10 @@ const app = function (Vue) {
         },
         created() {
             this.socket = io(SERVER_URL);
+
+            this.socket.on('stats', (data) => {
+                this.stats = data;
+            });
 
             this.socket.on('player.loginResponse', (data) => {
                 if (data.success) {

@@ -6,8 +6,8 @@ const httpServer = require('http').Server(app);
 const io         = require('socket.io')(httpServer);
 const Player     = require('./models/player');
 const Game       = require('./models/game');
-const socketManager = require('./services/socket-manager')(io);
 const stateManager  = require('./services/state-manager')();
+const socketManager = require('./services/socket-manager')(io);
 
 httpServer.listen(port);
 

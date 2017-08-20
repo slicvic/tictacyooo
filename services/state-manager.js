@@ -10,7 +10,6 @@ class StateManager {
      * Create a new instance.
      */
     constructor() {
-        this.connectedCounter = 0;
         this.players = {};
         this.games = {};
     }

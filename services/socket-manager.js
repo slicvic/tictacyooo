@@ -16,6 +16,7 @@ class SocketManager {
      */
     constructor(io) {
         this.io = io;
+        this.connectionCount = 0;
     }
 
     /**
@@ -24,6 +25,8 @@ class SocketManager {
      */
     onConnect(callback) {
         this.io.on('connect', (socket) => {
+            this.connectionCount++;
+            this.emitStats();
             callback.call(this, socket, SocketManager.generateSocketId(socket));
         });
     }
@@ -32,7 +35,13 @@ class SocketManager {
      * Check when a player disconnects.
      */
     onDisconnect(socket, callback) {
-        socket.on('disconnect', callback.bind(this));
+        socket.on('disconnect', () => {
+            if (this.connectionCount > 0) {
+                this.connectionCount--;
+                this.emitStats();
+            }
+            callback.call(this);
+        });
     }
 
     /**
@@ -125,14 +134,11 @@ class SocketManager {
 
     /**
      * Emit stats to all connected sockets.
-     * @param {Object} data
      */
-    emitStats({players = 0, games = 0} = {}) {
+    emitStats() {
         const data = {
-            players,
-            games
+            connectionCount: this.connectionCount
         };
-
         this.io.emit('stats', data);
     }
 }
