@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<title>TicTacYooo!</title>
+	<title>Tic-Tac-Yo!</title>
 	<link href="http://fonts.googleapis.com/css?family=Average|Courgette" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/src/css/app.css">
@@ -10,12 +10,12 @@
 <body>
 	<div id="app" v-cloak>
 		<header>
-			<h1><a v-on:click="location.reload()">Tic Tac Yooo!</a></h1>
+			<h1><a v-on:click="location.reload()">Tic Tac Yo!</a></h1>
 		</header>
 		<section class="login-card container" v-show="isStateLogin">
 			<div class="row">
 				<div class="col-xs-12">
-					<label class="login-card__label">What's yooo name?</label>
+					<label class="login-card__label">Enter yo name</label>
 				</div>
 				<div class="col-xs-12">
 					<input type="text" class="login-card__input"
@@ -40,7 +40,7 @@
 		<section class="game-card" v-show="isStatePlaying">
 			<h2 class="game-card__turn">{{ whosTurn }}</h2>
 			<div class="scoreboard">
-				<div class="player pull-left"><span class="player__marker">{{ game.players.me.marker }}</span> <span class="player__name">You</span></div>
+				<div class="player pull-left"><span class="player__marker">{{ game.players.me.marker }}</span> <span class="player__name">you</span></div>
 				<div class="player pull-right"><span class="player__marker">{{ game.players.opponent.marker }}</span> <span class="player__name">{{ game.players.opponent.name }}</span></div>
 			</div>
 			<div class="clearfix"></div>
