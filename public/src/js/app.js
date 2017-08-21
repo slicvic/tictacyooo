@@ -2,9 +2,9 @@ const app = function (Vue) {
     const SERVER_URL = window.location.origin;
 
     const State = {
-        Login: 'login',
-        FindOpponent: 'findOpponent',
-        Playing: 'playing'
+        Login: 'Login',
+        AwaitingOpponent: 'AwaitingOpponent',
+        Playing: 'Playing'
     };
 
     const GameStatus = {
@@ -73,7 +73,7 @@ const app = function (Vue) {
             this.socket.on('player.loginResponse', (data) => {
                 if (data.success) {
                     this.user.id = data.playerId;
-                    this.setState(State.FindOpponent);
+                    this.setState(State.AwaitingOpponent);
                 } else {
                     this.showAlert({
                         message: data.message
@@ -144,8 +144,8 @@ const app = function (Vue) {
             },
             setState: function(state) {
                 switch (state) {
-                    case State.FindOpponent:
-                        this.state = State.FindOpponent;
+                    case State.AwaitingOpponent:
+                        this.state = State.AwaitingOpponent;
                         this.socket.emit('player.findOpponent', {
                             playerId: this.user.id
                         });
@@ -209,7 +209,7 @@ const app = function (Vue) {
                     okButton: {
                         text: 'New Game',
                         onClick: () => {
-                            this.setState(State.FindOpponent);
+                            this.setState(State.AwaitingOpponent);
                         }
                     },
                     cancelButton: {
@@ -231,8 +231,8 @@ const app = function (Vue) {
             isStateLogin() {
                 return this.state === State.Login;
             },
-            isStateFindOpponent() {
-                return this.state === State.FindOpponent;
+            isStateAwaitingOpponent() {
+                return this.state === State.AwaitingOpponent;
             },
             isStatePlaying() {
                 return this.state === State.Playing;
