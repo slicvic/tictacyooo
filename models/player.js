@@ -82,8 +82,7 @@ class Player {
 Player.Status = {
     Idle: 'Idle',
     AwaitingOpponent: 'AwaitingOpponent',
-    Playing: 'Playing',
-    Away: 'Away'
+    Playing: 'Playing'
 };
 
 Player.NAME_MIN_LENGTH = 3;
