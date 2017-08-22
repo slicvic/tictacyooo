@@ -3,14 +3,18 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<title>Tic-Tac-Yo!</title>
-	<link href="http://fonts.googleapis.com/css?family=Average|Courgette" rel="stylesheet" type="text/css">
+	<link href="https://fonts.googleapis.com/css?family=Baloo+Bhaijaan" rel="stylesheet">
 	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/src/css/app.css">
 </head>
 <body>
 	<div id="app" v-cloak>
 		<header>
-			<h1><a v-on:click="location.reload()">Tic Tac Yo!</a></h1>
+			<h1 class="logo">
+				<a v-on:click="location.reload()">
+					<span>T</span>ic<span>T</span>ac<span>Y</span>o!
+				</a>
+			</h1>
 		</header>
 		<section class="login-card container" v-show="isStateLogin">
 			<div class="row">
@@ -38,7 +42,7 @@
 			</div>
 		</section>
 		<section class="game-card" v-show="isStatePlaying">
-			<h2 class="game-card__turn">{{ whosTurn }}</h2>
+			<h2 class="game-card__status"> {{ game.statusText }}</h2>
 			<div class="scoreboard">
 				<div class="player pull-left"><span class="player__marker">{{ game.players.me.marker }}</span> <span class="player__name">you</span></div>
 				<div class="player pull-right"><span class="player__marker">{{ game.players.opponent.marker }}</span> <span class="player__name">{{ game.players.opponent.name }}</span></div>
@@ -46,19 +50,19 @@
 			<div class="clearfix"></div>
 			<div class="board">
 				<div>
-					<div class="board__cell" v-on:click="makeMove(1)">{{ game.board[0] }}</div>
-					<div class="board__cell" v-on:click="makeMove(2)">{{ game.board[1] }}</div>
-					<div class="board__cell" v-on:click="makeMove(3)">{{ game.board[2] }}</div>
+					<div class="board__cell" v-on:click="makeMove(1)">{{ game.board.cell1 }}</div>
+					<div class="board__cell" v-on:click="makeMove(2)">{{ game.board.cell2 }}</div>
+					<div class="board__cell" v-on:click="makeMove(3)">{{ game.board.cell3 }}</div>
 				</div>
 				<div>
-					<div class="board__cell" v-on:click="makeMove(4)">{{ game.board[3] }}</div>
-					<div class="board__cell" v-on:click="makeMove(5)">{{ game.board[4] }}</div>
-					<div class="board__cell" v-on:click="makeMove(6)">{{ game.board[5] }}</div>
+					<div class="board__cell" v-on:click="makeMove(4)">{{ game.board.cell4 }}</div>
+					<div class="board__cell" v-on:click="makeMove(5)">{{ game.board.cell5 }}</div>
+					<div class="board__cell" v-on:click="makeMove(6)">{{ game.board.cell6 }}</div>
 				</div>
 				<div>
-					<div class="board__cell" v-on:click="makeMove(7)">{{ game.board[6] }}</div>
-					<div class="board__cell" v-on:click="makeMove(8)">{{ game.board[7] }}</div>
-					<div class="board__cell" v-on:click="makeMove(9)">{{ game.board[8] }}</div>
+					<div class="board__cell" v-on:click="makeMove(7)">{{ game.board.cell7 }}</div>
+					<div class="board__cell" v-on:click="makeMove(8)">{{ game.board.cell8 }}</div>
+					<div class="board__cell" v-on:click="makeMove(9)">{{ game.board.cell9 }}</div>
 				</div>
 			</div>
 		</section>
@@ -74,9 +78,9 @@
 				Created by <a href="http://www.slicvic.com">slicvic.com</a>
 			</small>
 		</footer>
-		<script src="socket.io.min.js"></script>
-		<script src="bower_components/vue/dist/vue.min.js"></script>
-		<script src="dist/js/app.js"></script>
 	</div>
+	<script src="socket.io.min.js"></script>
+	<script src="bower_components/vue/dist/vue.min.js"></script>
+	<script src="dist/js/app.js"></script>
 </body>
 </html>
