@@ -14,20 +14,20 @@ httpServer.listen(port);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules/socket.io-client/dist')));
 
-socketManager.onConnect(function(socket, socketId) {
+socketManager.onConnect(function(socket, userId) {
     // On player disconnect
     this.onDisconnect(socket, () => {
         // Remove player record
-        if (stateManager.players[socketId] instanceof Player) {
-            delete stateManager.players[socketId];
+        if (stateManager.players[userId] instanceof Player) {
+            delete stateManager.players[userId];
         }
 
         // Notify their opponent and if in game, update game status
         for (let gameId in stateManager.games) {
             const game = stateManager.games[gameId];
-            if (game.status === Game.Status.InProgress && game.getPlayerById(socketId)) {
+            if (game.status === Game.Status.InProgress && game.getPlayerById(userId)) {
                 let opponent;
-                if (socketId === game.playerO.id) {
+                if (userId === game.playerO.id) {
                     opponent = game.playerX;
                     game.status = Game.Status.Win.X;
                 } else {
@@ -47,7 +47,7 @@ socketManager.onConnect(function(socket, socketId) {
             if (!(typeof data === 'object' && typeof data.name === 'string')) {
                 throw Error('Invalid request data');
             }
-            const player = new Player({id: socketId, name: data.name, socket: socket});
+            const player = new Player({id: userId, name: data.name, socket: socket});
             stateManager.players[player.id] = player;
             this.emitLoginResponse(socket, {
                 success: true,

@@ -3,10 +3,10 @@
  */
 class SocketManager {
     /**
-     * Generate a unique socket id.
+     * Generate a unique user id.
      * @param {Object} socket
      */
-    static generateSocketId(socket) {
+    static generateUserId(socket) {
         return Buffer.from(socket.request.connection.remoteAddress + socket.request.headers['user-agent'] + socket.request.headers['cookie']).toString('base64');
     }
 
@@ -27,7 +27,7 @@ class SocketManager {
         this.io.on('connect', (socket) => {
             this.connectionCount++;
             this.emitStats();
-            callback.call(this, socket, SocketManager.generateSocketId(socket));
+            callback.call(this, socket, SocketManager.generateUserId(socket));
         });
     }
 
