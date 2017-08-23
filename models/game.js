@@ -64,7 +64,7 @@ class Game {
      * @throws {Error}
      */
     set status(status) {
-        if (!(Game.Status[status] || Game.Status.Win[status])) {
+        if (!(Game.Status[status])) {
             throw Error('Invalid argument status');
         }
 
@@ -193,56 +193,56 @@ class Game {
             && this._board[0] == this._board[1]
             && this._board[1] == this._board[2]
         ) {
-            this._status = Game.Status.Win[this._board[0]];
+            this._status = Game.Status[this._board[0]];
         }
         // Second row wins
         else if (this._board[3] != Game.Marker.Empty
             && this._board[3] == this._board[4]
             && this._board[4] == this._board[5]
         ) {
-            this._status = Game.Status.Win[this._board[3]];
+            this._status = Game.Status[this._board[3]];
         }
         // Third row wins
         else if (this._board[6] != Game.Marker.Empty
             && this._board[6] == this._board[7]
             && this._board[7] == this._board[8]
         ) {
-            this._status = Game.Status.Win[this._board[6]];
+            this._status = Game.Status[this._board[6]];
         }
         // First column wins
         else if (this._board[0] != Game.Marker.Empty
             && this._board[0] == this._board[3]
             && this._board[3] == this._board[6]
         ) {
-            this._status = Game.Status.Win[this._board[0]];
+            this._status = Game.Status[this._board[0]];
         }
         // Second column wins
         else if (this._board[1] != Game.Marker.Empty
             && this._board[1] == this._board[4]
             && this._board[4] == this._board[7]
         ) {
-            this._status = Game.Status.Win[this._board[1]];
+            this._status = Game.Status[this._board[1]];
         }
         // Third column wins
         else if (this._board[2] != Game.Marker.Empty
             && this._board[2] == this._board[5]
             && this._board[5] == this._board[8]
         ) {
-            this._status = Game.Status.Win[this._board[2]];
+            this._status = Game.Status[this._board[2]];
         }
         // Across right wins
         else if (this._board[0] != Game.Marker.Empty
             && this._board[0] == this._board[4]
             && this._board[4] == this._board[8]
         ) {
-            this._status = Game.Status.Win[this._board[0]];
+            this._status = Game.Status[this._board[0]];
         }
         // Across left wins
         else if (this._board[2] != Game.Marker.Empty
             && this._board[2] == this._board[4]
             && this._board[4] == this._board[6]
         ) {
-            this._status = Game.Status.Win[this._board[2]];
+            this._status = Game.Status[this._board[2]];
         }
         // Draw
         else if (this._board[0] != Game.Marker.Empty
@@ -269,10 +269,8 @@ Game.Marker = {
 Game.Status = {
     InProgress: 'InProgress',
     Draw: 'Draw',
-    Win: {
-        X: Game.Marker.X,
-        O: Game.Marker.O
-    }
+    X: Game.Marker.X, // X wins
+    O: Game.Marker.O  // O wins
 };
 
 module.exports = Game;

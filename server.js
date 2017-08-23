@@ -29,10 +29,10 @@ socketManager.onConnect(function(socket, userId) {
                 let opponent;
                 if (userId === game.playerO.id) {
                     opponent = game.playerX;
-                    game.status = Game.Status.Win.X;
+                    game.status = Game.Status.X;
                 } else {
                     opponent = game.playerO;
-                    game.status = Game.Status.Win.O;
+                    game.status = Game.Status.O;
                 }
                 this.emitOpponentLeft(opponent.socket);
                 // Remove game record
