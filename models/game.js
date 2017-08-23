@@ -151,29 +151,30 @@ class Game {
      */
     makeMove(playerId, cellNumber) {
         if (this.isOver()) {
-            throw Error('Too late yo! Game over!');
+            throw Error('Sorry, bud. Game over!');
         }
 
         cellNumber = Number(cellNumber);
 
         if (!(cellNumber >= 1 && cellNumber <= 9)) {
-            throw Error('Bad move yo! Out of bounds!');
+            throw Error('Sorry, bud. Invalid move!');
         }
 
         const player = this.getPlayerById(playerId);
 
         if (!player) {
-            throw Error("Chill out yo! Ain't cha game!");
+            // Player not in game
+            throw Error('Hahaha! I see what you did there!');
         }
 
         if (!this.isPlayerTurn(player)) {
-            throw Error("Chill out yo! Ain't cha turn!");
+            throw Error('Not so fast, bud!');
         }
 
         const cellIndex = (cellNumber - 1);
 
         if (this._board[cellIndex] !== Game.Piece.Empty) {
-            throw Error('Too late yo! Play already made!');
+            throw Error('Ooh, you almost had it. Gotta be quicker than that!');
         }
 
         if (player.id === this._playerX.id) {

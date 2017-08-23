@@ -105,9 +105,11 @@ const app = function (Vue) {
                     this.gameCard.board[data.cellNumber - 1].text = this.user.piece;
                     this.checkGameStatus(data.status);
                 } else {
-                    this.showAlert({
-                        message: data.message,
-                    });
+                    if (data.message != 'Not so fast, bud!') {
+                        this.showAlert({
+                            message: data.message,
+                        });
+                    }
                 }
             });
 

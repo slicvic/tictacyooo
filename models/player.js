@@ -15,7 +15,9 @@ class Player {
             throw Error('Invalid argument id');
         }
 
-        if (!(typeof name === 'string' && name.length >= Player.NAME_MIN_LENGTH && name.length <= Player.NAME_MAX_LENGTH)) {
+        name = (typeof name === 'string') ? name.trim().toLowerCase() : '';
+
+        if (!(name.length >= Player.NAME_MIN_LENGTH && name.length <= Player.NAME_MAX_LENGTH)) {
             throw Error(`Yo name must be between ${Player.NAME_MIN_LENGTH} and ${Player.NAME_MAX_LENGTH} characters!`);
         }
 
