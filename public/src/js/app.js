@@ -8,7 +8,6 @@ const app = function (Vue) {
     };
 
     const GameStatus = {
-        InProgress: 'InProgress',
         Draw: 'Draw'
     };
 
@@ -16,12 +15,19 @@ const app = function (Vue) {
         el: '#app',
         data: {
             socket: null,
-
             state: State.Login,
 
             user: {
                 id: '',
-                name: ''
+                name: '',
+                marker: ''
+            },
+
+            opponent: {
+                id: '',
+                name: '',
+                possessiveName: '',
+                marker: ''
             },
 
             toast: {
@@ -48,19 +54,22 @@ const app = function (Vue) {
             },
 
             game: {
-                id: '',
-                turn: '',
-                board: ['', '', '', '', '', '', '', '', ''],
-                players: {
-                    me: {
-                        marker: '',
-                    },
-                    opponent: {
-                        id: '',
-                        name: '',
-                        marker: ''
-                    }
-                }
+                id: ''
+            },
+
+            gameCard: {
+                feed: '',
+                board: [
+                    {text: ''},
+                    {text: ''},
+                    {text: ''},
+                    {text: ''},
+                    {text: ''},
+                    {text: ''},
+                    {text: ''},
+                    {text: ''},
+                    {text: ''}
+                ]
             }
         },
         created() {
@@ -92,8 +101,8 @@ const app = function (Vue) {
 
             this.socket.on('player.moveResponse', (data) => {
                 if (data.success) {
-                    this.game.turn = this.game.players.opponent.marker;
-                    this.game.board[data.cellNumber - 1] = this.game.players.me.marker;
+                    this.gameCard.feed = this.opponent.possessiveName + ' turn!';
+                    this.gameCard.board[data.cellNumber - 1].text = this.user.marker;
                     this.checkGameStatus(data.status);
                 } else {
                     this.showAlert({
@@ -103,24 +112,27 @@ const app = function (Vue) {
             });
 
             this.socket.on('game.opponentMove', (data) => {
-                this.game.turn = this.game.players.me.marker;
-                this.game.board[data.cellNumber - 1] = this.game.players.opponent.marker;
+                this.gameCard.feed = 'Your turn!';
+                this.gameCard.board[data.cellNumber - 1].text = this.opponent.marker;
                 this.checkGameStatus(data.status);
             });
 
             this.socket.on('game.start', (data) => {
                 this.game.id = data.gameId;
-                this.game.turn = data.turn;
-                this.game.players.me.marker = data.players.me.marker;
-                this.game.players.opponent.id = data.players.opponent.id;
-                this.game.players.opponent.name = data.players.opponent.name;
-                this.game.players.opponent.marker = data.players.opponent.marker;
-                this.game.board = ['', '', '', '', '', '', '', '', ''];
+                this.user.marker = data.user.marker;
+                this.opponent.id = data.opponent.id;
+                this.opponent.name = data.opponent.name;
+                this.opponent.marker = data.opponent.marker;
+                this.opponent.possessiveName = this.generatePossesiveName(data.opponent.name);
+                this.gameCard.feed = (data.user.firstTurn) ? 'You go first!' : this.opponent.name + ' goes first!';
+                for (let i in this.gameCard.board) {
+                    this.gameCard.board[i].text = '';
+                }
                 this.state = State.Playing;
             });
 
             this.socket.on('game.opponentLeft', (data) => {
-                this.showGameOverAlert(data.message);
+                this.gameOver(data.message);
             });
         },
         methods: {
@@ -131,14 +143,14 @@ const app = function (Vue) {
             },
             checkGameStatus: function(status) {
                 switch (status) {
-                    case this.game.players.me.marker:
-                        this.showGameOverAlert('You win!');
+                    case this.user.marker:
+                        this.gameOver('You win!');
                         break;
-                    case this.game.players.opponent.marker:
-                        this.showGameOverAlert(this.game.players.opponent.name + ' wins!');
+                    case this.opponent.marker:
+                        this.gameOver('You lose!');
                         break;
                     case GameStatus.Draw:
-                        this.showGameOverAlert('Draw!');
+                        this.gameOver('Draw!');
                         break;
                 }
             },
@@ -180,7 +192,6 @@ const app = function (Vue) {
                 }
 
                 this.alert.message = message;
-
                 this.alert.okButton.text = okButton.text;
                 this.alert.okButton.onClick = () => {
                     this.hideAlert();
@@ -202,29 +213,33 @@ const app = function (Vue) {
 
                 this.alert.show = true;
             },
-            showGameOverAlert(message) {
-                this.game.turn = '';
+            hideAlert() {
+                this.alert.show = false;
+                this.alert.okButton.onClick = null;
+                this.alert.cancelButton.show = false;
+                this.alert.cancelButton.onClick = null;
+            },
+            gameOver(message) {
+                this.gameCard.feed = 'Game Over!'
+
                 this.showAlert({
                     message: message,
                     okButton: {
-                        text: 'New Game',
+                        text: 'Play Again',
                         onClick: () => {
                             this.setState(State.AwaitingOpponent);
                         }
                     },
                     cancelButton: {
-                        text: 'Peace Out',
+                        text: 'GTFO',
                         onClick: () => {
                             this.setState(State.Login);
                         }
                     }
                 });
             },
-            hideAlert() {
-                this.alert.show = false;
-                this.alert.okButton.onClick = null;
-                this.alert.cancelButton.show = false;
-                this.alert.cancelButton.onClick = null;
+            generatePossesiveName(name) {
+                return name + (name[name.length - 1].toLowerCase() === 's' ? "'" : "'s");
             }
         },
         computed: {
@@ -236,16 +251,6 @@ const app = function (Vue) {
             },
             isStatePlaying() {
                 return this.state === State.Playing;
-            },
-            whosTurn() {
-                switch (this.game.turn) {
-                    case this.game.players.me.marker:
-                        return 'Yo turn!';
-                    case this.game.players.opponent.marker:
-                        return `${this.game.players.opponent.name}'s turn!`;
-                    default:
-                        return '';
-                }
             }
         }
     });
