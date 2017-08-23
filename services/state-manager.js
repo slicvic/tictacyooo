@@ -63,7 +63,7 @@ class StateManager {
     		}
 
     		const playerO = this.players[playerId];
-            const firstTurn = (mathHelper.random() % 2 === 0) ? Game.Marker.X : Game.Marker.O;
+            const firstTurn = (mathHelper.random() % 2 === 0) ? Game.Piece.X : Game.Piece.O;
     		const game = new Game({playerX: playerX, playerO: playerO, firstTurn: firstTurn});
 
             playerX.status = Player.Status.Playing;
@@ -72,26 +72,26 @@ class StateManager {
     		playerX.socket.emit('game.start', {
     			gameId: game.id,
                 user: {
-                    firstTurn: (game.turn === Game.Marker.X),
-                    marker: Game.Marker.X
+                    firstTurn: (game.turn === Game.Piece.X),
+                    piece: Game.Piece.X
                 },
                 opponent: {
                     id: game.playerO.id,
                     name: game.playerO.name,
-                    marker: Game.Marker.O
+                    piece: Game.Piece.O
                 }
     		});
 
     		playerO.socket.emit('game.start', {
     			gameId: game.id,
                 user: {
-                    firstTurn: (game.turn === Game.Marker.O),
-    				marker: Game.Marker.O
+                    firstTurn: (game.turn === Game.Piece.O),
+    				piece: Game.Piece.O
     			},
     			opponent: {
     				id: playerX.id,
     				name: playerX.name,
-                    marker: Game.Marker.X
+                    piece: Game.Piece.X
     			}
     		});
 

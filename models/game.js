@@ -7,7 +7,7 @@ class Game {
     /**
      * Create a new game.
      * @param  {string} id
-     * @param  {Game.Marker} firstTurn
+     * @param  {Game.Piece} firstTurn
      * @param  {Game.Status} status
      * @param  {Player} playerX
      * @param  {Player} playerO
@@ -26,7 +26,7 @@ class Game {
             throw Error('Invalid argument playerO');
         }
 
-        if (!(firstTurn === Game.Marker.X || firstTurn === Game.Marker.O)) {
+        if (!(firstTurn === Game.Piece.X || firstTurn === Game.Piece.O)) {
             throw Error('Invalid argument firstTurn');
         }
 
@@ -38,7 +38,7 @@ class Game {
         this._board = [];
 
         for (let i = 1; i < 10; i++) {
-            this._board.push(Game.Marker.Empty);
+            this._board.push(Game.Piece.Empty);
         }
     }
 
@@ -89,7 +89,7 @@ class Game {
 
     /**
      * Get turn.
-     * @return {Game.Marker}
+     * @return {Game.Piece}
      */
     get turn() {
         return this._turn;
@@ -114,11 +114,11 @@ class Game {
             throw Error('Invalid argument player');
         }
 
-        if (player.id === this._playerX.id && this._turn === Game.Marker.X) {
+        if (player.id === this._playerX.id && this._turn === Game.Piece.X) {
             return true;
         }
 
-        if (player.id === this._playerO.id && this._turn === Game.Marker.O) {
+        if (player.id === this._playerO.id && this._turn === Game.Piece.O) {
             return true;
         }
 
@@ -172,16 +172,16 @@ class Game {
 
         const cellIndex = (cellNumber - 1);
 
-        if (this._board[cellIndex] !== Game.Marker.Empty) {
+        if (this._board[cellIndex] !== Game.Piece.Empty) {
             throw Error('Too late yo! Play already made!');
         }
 
         if (player.id === this._playerX.id) {
-            this._board[cellIndex] = Game.Marker.X;
-            this._turn = Game.Marker.O;
+            this._board[cellIndex] = Game.Piece.X;
+            this._turn = Game.Piece.O;
         } else {
-            this._board[cellIndex] = Game.Marker.O;
-            this._turn = Game.Marker.X;
+            this._board[cellIndex] = Game.Piece.O;
+            this._turn = Game.Piece.X;
         }
 
         this._checkStatus();
@@ -189,78 +189,78 @@ class Game {
 
     _checkStatus() {
         // First row wins
-        if (this._board[0] != Game.Marker.Empty
+        if (this._board[0] != Game.Piece.Empty
             && this._board[0] == this._board[1]
             && this._board[1] == this._board[2]
         ) {
             this._status = Game.Status[this._board[0]];
         }
         // Second row wins
-        else if (this._board[3] != Game.Marker.Empty
+        else if (this._board[3] != Game.Piece.Empty
             && this._board[3] == this._board[4]
             && this._board[4] == this._board[5]
         ) {
             this._status = Game.Status[this._board[3]];
         }
         // Third row wins
-        else if (this._board[6] != Game.Marker.Empty
+        else if (this._board[6] != Game.Piece.Empty
             && this._board[6] == this._board[7]
             && this._board[7] == this._board[8]
         ) {
             this._status = Game.Status[this._board[6]];
         }
         // First column wins
-        else if (this._board[0] != Game.Marker.Empty
+        else if (this._board[0] != Game.Piece.Empty
             && this._board[0] == this._board[3]
             && this._board[3] == this._board[6]
         ) {
             this._status = Game.Status[this._board[0]];
         }
         // Second column wins
-        else if (this._board[1] != Game.Marker.Empty
+        else if (this._board[1] != Game.Piece.Empty
             && this._board[1] == this._board[4]
             && this._board[4] == this._board[7]
         ) {
             this._status = Game.Status[this._board[1]];
         }
         // Third column wins
-        else if (this._board[2] != Game.Marker.Empty
+        else if (this._board[2] != Game.Piece.Empty
             && this._board[2] == this._board[5]
             && this._board[5] == this._board[8]
         ) {
             this._status = Game.Status[this._board[2]];
         }
         // Across right wins
-        else if (this._board[0] != Game.Marker.Empty
+        else if (this._board[0] != Game.Piece.Empty
             && this._board[0] == this._board[4]
             && this._board[4] == this._board[8]
         ) {
             this._status = Game.Status[this._board[0]];
         }
         // Across left wins
-        else if (this._board[2] != Game.Marker.Empty
+        else if (this._board[2] != Game.Piece.Empty
             && this._board[2] == this._board[4]
             && this._board[4] == this._board[6]
         ) {
             this._status = Game.Status[this._board[2]];
         }
         // Draw
-        else if (this._board[0] != Game.Marker.Empty
-            && this._board[1] != Game.Marker.Empty
-            && this._board[2] != Game.Marker.Empty
-            && this._board[3] != Game.Marker.Empty
-            && this._board[4] != Game.Marker.Empty
-            && this._board[5] != Game.Marker.Empty
-            && this._board[6] != Game.Marker.Empty
-            && this._board[7] != Game.Marker.Empty
-            && this._board[8] != Game.Marker.Empty
+        else if (this._board[0] != Game.Piece.Empty
+            && this._board[1] != Game.Piece.Empty
+            && this._board[2] != Game.Piece.Empty
+            && this._board[3] != Game.Piece.Empty
+            && this._board[4] != Game.Piece.Empty
+            && this._board[5] != Game.Piece.Empty
+            && this._board[6] != Game.Piece.Empty
+            && this._board[7] != Game.Piece.Empty
+            && this._board[8] != Game.Piece.Empty
         ) {
             this._status = Game.Status.Draw;
         }
     }
 }
 
-Game.Marker = {
+Game.Piece = {
     X: 'X',
     O: 'O',
     Empty: ''
@@ -269,8 +269,8 @@ Game.Marker = {
 Game.Status = {
     InProgress: 'InProgress',
     Draw: 'Draw',
-    X: Game.Marker.X, // X wins
-    O: Game.Marker.O  // O wins
+    X: Game.Piece.X, // X Wins
+    O: Game.Piece.O  // O Wins
 };
 
 module.exports = Game;

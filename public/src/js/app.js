@@ -20,14 +20,14 @@ const app = function (Vue) {
             user: {
                 id: '',
                 name: '',
-                marker: ''
+                piece: ''
             },
 
             opponent: {
                 id: '',
                 name: '',
                 possessiveName: '',
-                marker: ''
+                piece: ''
             },
 
             toast: {
@@ -102,7 +102,7 @@ const app = function (Vue) {
             this.socket.on('player.moveResponse', (data) => {
                 if (data.success) {
                     this.gameCard.feed = this.opponent.possessiveName + ' turn!';
-                    this.gameCard.board[data.cellNumber - 1].text = this.user.marker;
+                    this.gameCard.board[data.cellNumber - 1].text = this.user.piece;
                     this.checkGameStatus(data.status);
                 } else {
                     this.showAlert({
@@ -113,16 +113,16 @@ const app = function (Vue) {
 
             this.socket.on('game.opponentMove', (data) => {
                 this.gameCard.feed = 'Your turn!';
-                this.gameCard.board[data.cellNumber - 1].text = this.opponent.marker;
+                this.gameCard.board[data.cellNumber - 1].text = this.opponent.piece;
                 this.checkGameStatus(data.status);
             });
 
             this.socket.on('game.start', (data) => {
                 this.game.id = data.gameId;
-                this.user.marker = data.user.marker;
+                this.user.piece = data.user.piece;
                 this.opponent.id = data.opponent.id;
                 this.opponent.name = data.opponent.name;
-                this.opponent.marker = data.opponent.marker;
+                this.opponent.piece = data.opponent.piece;
                 this.opponent.possessiveName = this.generatePossesiveName(data.opponent.name);
                 this.gameCard.feed = (data.user.firstTurn) ? 'You go first!' : this.opponent.name + ' goes first!';
                 for (let i in this.gameCard.board) {
@@ -143,10 +143,10 @@ const app = function (Vue) {
             },
             checkGameStatus: function(status) {
                 switch (status) {
-                    case this.user.marker:
+                    case this.user.piece:
                         this.gameOver('You win!');
                         break;
-                    case this.opponent.marker:
+                    case this.opponent.piece:
                         this.gameOver('You lose!');
                         break;
                     case GameStatus.Draw:
@@ -231,7 +231,7 @@ const app = function (Vue) {
                         }
                     },
                     cancelButton: {
-                        text: 'GTFO',
+                        text: "I'm out",
                         onClick: () => {
                             this.setState(State.Login);
                         }

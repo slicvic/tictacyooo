@@ -44,8 +44,8 @@
 		<section class="game-card" v-show="isStatePlaying">
 			<h2 class="game-card__feed"> {{ gameCard.feed }}</h2>
 			<div class="scoreboard">
-				<div class="player pull-left"><span class="player__marker">{{ user.marker }}</span> <span class="player__name">you</span></div>
-				<div class="player pull-right"><span class="player__marker">{{ opponent.marker }}</span> <span class="player__name">{{ opponent.name }}</span></div>
+				<div class="player pull-left"><span class="player__piece">{{ user.piece }}</span> <span class="player__name">you</span></div>
+				<div class="player pull-right"><span class="player__piece">{{ opponent.piece }}</span> <span class="player__name">{{ opponent.name }}</span></div>
 			</div>
 			<div class="clearfix"></div>
 			<div class="board">
